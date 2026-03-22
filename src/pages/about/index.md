@@ -44,7 +44,7 @@ leftLink:
 
 ---
 站点当前版本：3.1
-本站基于[Astro](https://astro.build/blog/)，[MIT LICENSE](/mit.txt)
+本站基于[Astro](https://astro.build/blog/)，[MIT LICENSE](/about/mit.txt)
 
 站点托管于GitHub，使用Vercel部署
 
