@@ -1,0 +1,68 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageTopbar from "../../components/PageTopbar.astro";
+import { getCollectionCards } from "../../lib/content";
+import { formatDate } from "../../lib/format";
+import { DEFAULT_PAGE_LINKS } from "../../lib/site";
+
+const entries = await getCollectionCards("wiki");
+const items = entries.map((entry) => ({
+  title: entry.title,
+  desc: entry.description ?? "",
+  date: formatDate(entry.date),
+  url: entry.url,
+  cover: entry.cover,
+  hasPreview: entry.hasPreview,
+}));
+---
+
+<BaseLayout title="Wiki · 汐塔 | 云海之上" description="汐塔世界观条目索引。">
+  <main class="wrap wiki-page">
+    <PageTopbar leftLink={{ href: "/", label: "home" }} rightLinks={DEFAULT_PAGE_LINKS} />
+
+    <section class="page-head">
+      <h1 class="page-title">Wiki</h1>
+      <p class="page-subtitle">搜索标题与简介。支持中文关键词。</p>
+      <p class="page-subtitle" style="margin-top:6px;">检测到条目数：{items.length}</p>
+
+      <div class="wiki-search">
+        <input
+          id="wikiSearchInput"
+          class="wiki-search__input"
+          type="search"
+          placeholder="搜索条目…（例如：云海 / 捕鲸 / 潮汐塔）"
+          autocomplete="off"
+          inputmode="search"
+        />
+        <button id="wikiSearchClear" class="wiki-search__clear" type="button">清除</button>
+      </div>
+
+      <div id="wikiSearchHint" class="wiki-search__hint">共 {items.length} 条</div>
+    </section>
+
+    <section class="wiki-index" id="wikiIndex">
+      {items.length === 0 ? (
+        <div class="empty-note">这里还没有 wiki 条目。</div>
+      ) : (
+        items.map((item) => (
+          <a class="wiki-row" href={item.url}>
+            <div class="wiki-row__date">{item.date}</div>
+            <div class="wiki-row__main">
+              {item.hasPreview && item.cover ? (
+                <div class="wiki-row__cover-shell">
+                  <img class="wiki-row__cover" src={item.cover} alt="" loading="lazy" />
+                </div>
+              ) : null}
+              <div class="wiki-row__title">{item.title}</div>
+              {item.desc ? <div class="wiki-row__desc">{item.desc}</div> : null}
+            </div>
+            <div class="wiki-row__arrow">↗</div>
+          </a>
+        ))
+      )}
+    </section>
+
+    <script id="wikiIndexData" type="application/json" set:html={JSON.stringify(items)}></script>
+    <script src="/scripts/wiki-index.js" defer></script>
+  </main>
+</BaseLayout>

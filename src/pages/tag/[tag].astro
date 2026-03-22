@@ -1,0 +1,33 @@
+---
+import SectionPageLayout from "../../layouts/SectionPageLayout.astro";
+import { getAllTags, getTagCards } from "../../lib/content";
+import { formatDate } from "../../lib/format";
+
+export async function getStaticPaths() {
+  const tags = await getAllTags();
+  return tags.map((tag) => ({ params: { tag } }));
+}
+
+const tag = Astro.params.tag ?? "";
+const items = await getTagCards(tag);
+const pageTitle = `标签：${tag}`;
+---
+
+<SectionPageLayout title={pageTitle} description={`标签 ${tag} 的内容索引。`} heading={pageTitle}>
+  <div style="border-top:1px solid var(--line2); padding-top:12px;">
+    {items.length === 0 ? (
+      <p style="color:var(--muted);">当前还没有文章使用这个标签。</p>
+    ) : (
+      items.map((item) => (
+        <div class="tl-item" style="grid-template-columns: 110px 18px 1fr;">
+          <div class="tl-date">{formatDate(item.date)}</div>
+          <div class="tl-line"><div class="tl-dot"></div></div>
+          <div class="tl-title">
+            <a href={item.url}>{item.title}</a>
+            {item.summary ? <div style="color:var(--muted); font-size:13px; margin-top:4px; line-height:1.7;">{item.summary}</div> : null}
+          </div>
+        </div>
+      ))
+    )}
+  </div>
+</SectionPageLayout>

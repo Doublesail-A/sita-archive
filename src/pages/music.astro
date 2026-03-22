@@ -1,0 +1,83 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageTopbar from "../components/PageTopbar.astro";
+import { DEFAULT_PAGE_LINKS } from "../lib/site";
+import poster from "../img/music/01.webp";
+
+const songs = [
+  "628812162",
+  "628811598",
+  "628812391",
+  "628812135",
+];
+
+const qqOpenUrl = "https://i.y.qq.com/v8/playsong.html?songid=628812162&songtype=0#webchat_redirect";
+const NETEASE_PLAYLIST_ID = "182062991";
+const neteaseUrl = `https://music.163.com/#/playlist?id=${NETEASE_PLAYLIST_ID}`;
+
+function qqOutchainSrc(songid: string) {
+  return `https://i.y.qq.com/n2/m/outchain/player/index.html?songid=${songid}&songtype=0`;
+}
+---
+
+<BaseLayout title="Music · 汐塔 | 云海之上" description="汐塔音乐页面。">
+  <main class="wrap" style="padding-top:22px;padding-bottom:64px;">
+    <PageTopbar leftLink={{ href: "/", label: "home" }} rightLinks={DEFAULT_PAGE_LINKS} />
+
+    <section class="section" style="padding-top:24px;">
+      <div class="section-head">
+        <h2 class="h2">music</h2>
+        <a class="more" href="/">home</a>
+      </div>
+
+      <section class="music-shell">
+        <div class="music-card">
+          <div class="music-list">
+            {songs.map((id, idx) => (
+              <div class="track">
+                <div class="player-frame">
+                  <iframe
+                    title={`QQ Music Player ${idx + 1}`}
+                    src={qqOutchainSrc(id)}
+                    frameborder="0"
+                    marginwidth="0"
+                    marginheight="0"
+                    allow="encrypted-media"
+                    loading="lazy"
+                  ></iframe>
+                </div>
+              </div>
+            ))}
+
+            <div class="music-links">
+              <a href={qqOpenUrl} target="_blank" rel="noreferrer">在 QQ 音乐打开</a>
+              <span class="dot">·</span>
+              <a href={neteaseUrl} target="_blank" rel="noreferrer">在网易云打开</a>
+            </div>
+          </div>
+
+          <figure class="music-art">
+            <img src={poster.src} alt="" />
+          </figure>
+        </div>
+      </section>
+    </section>
+
+    <style>
+      .music-shell{ margin-top: 14px; border-top: 1px solid var(--line2); padding-top: 14px; }
+      .music-card{ display: grid; grid-template-columns: 1fr; gap: 14px; align-items: start; }
+      @media (min-width: 900px){ .music-card{ grid-template-columns: minmax(0, 520px) 1fr; gap: 18px; } }
+      .music-list{ min-width: 0; }
+      .track{ padding: 10px 0; border-bottom: 1px solid rgba(31,35,40,.08); }
+      .track:last-child{ border-bottom: none; }
+      .player-frame{ width: min(520px, 92vw); height: 74px; border: 1px solid rgba(31,35,40,.12); background: rgba(255,255,255,.70); }
+      @media (min-width: 900px){ .player-frame{ width: 100%; } }
+      .player-frame iframe{ width: 100%; height: 100%; border: 0; display: block; background: transparent; }
+      .music-links{ margin-top: 12px; font-size: 13px; color: var(--muted); line-height: 1.8; }
+      .music-links a{ text-decoration: underline; text-underline-offset: 3px; }
+      .dot{ margin: 0 8px; opacity: .6; }
+      .music-art{ margin: 0; width: 100%; border: 1px solid rgba(31,35,40,.12); background: rgba(255,255,255,.55); }
+      .music-art img{ width: 100%; height: auto; display: block; }
+    </style>
+  </main>
+</BaseLayout>

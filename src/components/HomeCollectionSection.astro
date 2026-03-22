@@ -1,0 +1,40 @@
+---
+import type { ContentCard } from "../lib/content";
+import { formatDate } from "../lib/format";
+
+interface Props {
+  id: string;
+  title: string;
+  items: ContentCard[];
+  href: string;
+  emptyText?: string;
+}
+
+const { id, title, items, href, emptyText = `暂无 ${title} 条目。` } = Astro.props as Props;
+---
+
+<section class="section" id={id}>
+  <div class="section-head section-head--home">
+    <h2 class="h2">{title}</h2>
+  </div>
+
+  <div class="home-list">
+    {items.length === 0 ? (
+      <div class="home-list__empty">{emptyText}</div>
+    ) : (
+      items.map((item) => (
+        <a class="home-list__item" href={item.url}>
+          <div class="home-list__meta">{formatDate(item.date)}</div>
+          <div class="home-list__body">
+            <h3 class="home-list__title">{item.title}</h3>
+            {item.description ? <p class="home-list__desc">{item.description}</p> : null}
+          </div>
+        </a>
+      ))
+    )}
+  </div>
+
+  <div class="home-section-tail">
+    <a class="home-section-tail__link" href={href}>查看全部 {title}</a>
+  </div>
+</section>

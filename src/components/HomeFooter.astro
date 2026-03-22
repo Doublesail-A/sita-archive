@@ -1,0 +1,23 @@
+---
+import footImg from "../img/foot.webp";
+import { toAssetSrc } from "../lib/format";
+import { FOOTER_LINKS, OWNER_EMAIL } from "../lib/site";
+---
+
+<footer class="footer">
+  <img class="footer-img" src={toAssetSrc(footImg)} alt="" aria-hidden="true" />
+  <div class="footer-content">
+    <div class="footer-inner">
+      <div class="footer-links">
+        {FOOTER_LINKS.map((link) => (
+          <a href={link.href}>{link.label}</a>
+        ))}
+      </div>
+
+      <div class="footer-mini">
+        <div>非官方同人站点</div>
+        <div><a href={`mailto:${OWNER_EMAIL}`}>联系站长</a></div>
+      </div>
+    </div>
+  </div>
+</footer>

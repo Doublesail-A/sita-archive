@@ -1,0 +1,22 @@
+---
+import SectionPageLayout from "../../layouts/SectionPageLayout.astro";
+import { collectionEntryUrl, getEntryEntries } from "../../lib/content";
+
+const items = await getEntryEntries();
+---
+
+<SectionPageLayout title="设定词条" description="汐塔设定词条索引。" heading="设定词条">
+  <div class="wiki-list">
+    {items.length === 0 ? (
+      <div class="empty-note">这里还没有设定词条。</div>
+    ) : (
+      items.map((item) => (
+        <a class="wiki-item" href={collectionEntryUrl("entries", item.slug)}>
+          <h3 class="wiki-title">{item.data.title}</h3>
+          {item.data.summary ? <p class="wiki-desc">{item.data.summary}</p> : <p class="wiki-desc">点击进入阅读。</p>}
+          {item.data.tags?.length ? <p class="wiki-desc">标签：{item.data.tags.join(" / ")}</p> : null}
+        </a>
+      ))
+    )}
+  </div>
+</SectionPageLayout>

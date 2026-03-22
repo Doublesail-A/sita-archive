@@ -1,0 +1,11 @@
+---
+import SectionPageLayout from "../../layouts/SectionPageLayout.astro";
+import ContentIndexList from "../../components/ContentIndexList.astro";
+import { getCollectionCards } from "../../lib/content";
+
+const items = await getCollectionCards("doujin");
+---
+
+<SectionPageLayout title="Doujin" description="汐塔同人作品索引页面。" heading="doujin">
+  <ContentIndexList items={items} emptyText="这里还没有 doujin 条目。" />
+</SectionPageLayout>

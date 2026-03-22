@@ -1,0 +1,33 @@
+---
+import type { ContentCard } from "../lib/content";
+import { formatDate } from "../lib/format";
+
+interface Props {
+  items: ContentCard[];
+  emptyText?: string;
+}
+
+const { items, emptyText = "这里还没有条目。" } = Astro.props as Props;
+---
+
+<div class="entry-index-list">
+  {items.length === 0 ? (
+    <div class="empty-note">{emptyText}</div>
+  ) : (
+    items.map((item) => (
+      <a class:list={["entry-index-item", item.hasPreview && "entry-index-item--with-cover"]} href={item.url}>
+        <div class="entry-index-item__date">{formatDate(item.date)}</div>
+        <div class="entry-index-item__main">
+          {item.hasPreview && item.cover ? (
+            <div class="entry-index-item__cover-shell">
+              <img class="entry-index-item__cover" src={item.cover} alt="" loading="lazy" />
+            </div>
+          ) : null}
+          <div class="entry-index-item__title">{item.title}</div>
+          {item.description ? <div class="entry-index-item__desc">{item.description}</div> : null}
+        </div>
+        <div class="entry-index-item__arrow">↗</div>
+      </a>
+    ))
+  )}
+</div>

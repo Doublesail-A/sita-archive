@@ -1,0 +1,26 @@
+---
+import { getCollection } from "astro:content";
+import ArticlePageLayout from "../../layouts/ArticlePageLayout.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("entries");
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const description = entry.data.summary;
+---
+
+<ArticlePageLayout
+  title={entry.data.title}
+  description={description}
+  backHref="/entries/"
+  backLabel="返回设定词条"
+>
+  {entry.data.tags?.length ? <p>标签：{entry.data.tags.join(" / ")}</p> : null}
+  <Content />
+</ArticlePageLayout>

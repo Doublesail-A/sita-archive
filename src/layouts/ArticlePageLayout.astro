@@ -1,0 +1,55 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import PageTopbar from "../components/PageTopbar.astro";
+import { DEFAULT_PAGE_LINKS, SITE_TITLE, type SiteLink } from "../lib/site";
+
+interface Props {
+  title: string;
+  description?: string;
+  metaLabel?: string;
+  metaValue?: string;
+  backHref?: string;
+  backLabel?: string;
+  leftLink?: SiteLink;
+  rightLinks?: SiteLink[];
+}
+
+const {
+  title,
+  description,
+  metaLabel,
+  metaValue,
+  backHref,
+  backLabel,
+  leftLink = { href: "/", label: "home" },
+  rightLinks = DEFAULT_PAGE_LINKS,
+} = Astro.props as Props;
+---
+
+<BaseLayout title={`${title} · ${SITE_TITLE}`} description={description}>
+  <main class="wrap article-page">
+    <PageTopbar leftLink={leftLink} rightLinks={rightLinks} />
+
+    <article class="article">
+      <header class="article-head">
+        <h1 class="article-title">{title}</h1>
+        {metaLabel ? (
+          <div class="article-meta">
+            <span class="article-date">{metaLabel}：{metaValue ?? "—"}</span>
+          </div>
+        ) : null}
+        {description ? <p class="article-desc">{description}</p> : null}
+      </header>
+
+      <div class="prose">
+        <slot />
+      </div>
+
+      {backHref && backLabel ? (
+        <footer class="article-foot">
+          <a class="pill-ink" href={backHref}>{backLabel}</a>
+        </footer>
+      ) : null}
+    </article>
+  </main>
+</BaseLayout>

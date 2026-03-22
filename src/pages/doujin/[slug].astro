@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+import ArticlePageLayout from "../../layouts/ArticlePageLayout.astro";
+import { formatDate } from "../../lib/format";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("doujin");
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<ArticlePageLayout
+  title={entry.data.title}
+  description={entry.data.description ?? entry.data.summary}
+  metaLabel="更新日期"
+  metaValue={formatDate(entry.data.pubDate ?? entry.data.date)}
+  backHref="/doujin/"
+  backLabel="返回 doujin"
+  leftLink={{ href: "/doujin/", label: "doujin" }}
+>
+  <Content />
+</ArticlePageLayout>

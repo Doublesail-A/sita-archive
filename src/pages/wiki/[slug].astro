@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+import ArticlePageLayout from "../../layouts/ArticlePageLayout.astro";
+import { formatDate } from "../../lib/format";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("wiki");
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<ArticlePageLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  metaLabel="修改日期"
+  metaValue={formatDate(entry.data.pubDate)}
+  backHref="/wiki/"
+  backLabel="返回 wiki"
+  leftLink={{ href: "/wiki/", label: "wiki" }}
+>
+  <Content />
+</ArticlePageLayout>

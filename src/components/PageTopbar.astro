@@ -1,0 +1,25 @@
+---
+import type { SiteLink } from "../lib/site";
+
+interface Props {
+  leftLink?: SiteLink;
+  rightLinks?: SiteLink[];
+}
+
+const {
+  leftLink = { href: "/", label: "home" },
+  rightLinks = [],
+} = Astro.props as Props;
+---
+
+<header class="page-topbar">
+  <a class="pill-ink" href={leftLink.href}>{leftLink.label}</a>
+
+  {rightLinks.length > 0 ? (
+    <div class="page-topbar__right">
+      {rightLinks.map((link) => (
+        <a class="pill-ink" href={link.href}>{link.label}</a>
+      ))}
+    </div>
+  ) : null}
+</header>
