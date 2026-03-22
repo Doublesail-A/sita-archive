@@ -21,9 +21,11 @@ leftLink:
 
 ---
 官方QQ群(603618304)
+
 [同人创作交流群（非官方）](https://qun.qq.com/universal-share/share?ac=1&authKey=EdWXrbJQ1%2Bo8iR2W5GBjyL8TCBrvPto7FikSxr1%2BEP1b9NHru77ikM1bVkfKXWzN&busi_data=eyJncm91cENvZGUiOiIxMDY3NDUwNDU4IiwidG9rZW4iOiJKbnIwTCszSGFzZEZLb1RBZ1NKQkRvU0VpamNsSnVnVEFIWkhmbTU1TEVSQ3pvMFI2Sk53eHdBaVdSek5PN0NsIiwidWluIjoiMzYyOTM2MDg5MSJ9&data=u70H9vKE41QDNrS_-q2hBfvfcjR80mHjeiJ2lR3tCcCY1d_5G8cefpnOOm1fkjB58Ix8pNyqgIZ8V6gJE-5MIQ&svctype=4&tempid=h5_group_info)
 
 官方社媒
+
 [B站](https://b23.tv/e9bbYDj)
 
 [微博](https://m.weibo.cn/u/7830139417)
@@ -42,7 +44,7 @@ leftLink:
 
 ---
 站点当前版本：3.1
-本站基于[Astro](https://astro.build/blog/)，[MIT LICENSE](src/pages/about/mit.txt)
+本站基于[Astro](https://astro.build/blog/)，[MIT LICENSE](/mit.txt)
 
 站点托管于GitHub，使用Vercel部署
 
