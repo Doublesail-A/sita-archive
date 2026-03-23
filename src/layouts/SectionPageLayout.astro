@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import PageTopbar from "../components/PageTopbar.astro";
-import { DEFAULT_PAGE_LINKS, SITE_TITLE, type SiteLink } from "../lib/site";
+import { DEFAULT_PAGE_LINKS, SITE_TITLE, buildBreadcrumbJsonLd, mergeKeywords, type SiteLink } from "../lib/site";
 
 interface Props {
   title: string;
@@ -11,6 +11,7 @@ interface Props {
   backLabel?: string;
   leftLink?: SiteLink;
   rightLinks?: SiteLink[];
+  keywords?: string[];
 }
 
 const {
@@ -21,10 +22,29 @@ const {
   backLabel = "home",
   leftLink = { href: "/", label: "home" },
   rightLinks = DEFAULT_PAGE_LINKS,
+  keywords = [],
 } = Astro.props as Props;
+
+const pathname = Astro.url.pathname;
+const pageKeywords = mergeKeywords([title, heading, ...keywords]);
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `${heading} · ${SITE_TITLE}`,
+    description,
+    url: new URL(pathname, Astro.site).toString(),
+    inLanguage: "zh-CN",
+    keywords: pageKeywords.join(", "),
+  },
+  buildBreadcrumbJsonLd([
+    { name: "首页", path: "/" },
+    { name: heading, path: pathname },
+  ]),
+];
 ---
 
-<BaseLayout title={`${title} · ${SITE_TITLE}`} description={description}>
+<BaseLayout title={`${title} · ${SITE_TITLE}`} description={description} keywords={pageKeywords} jsonLd={jsonLd}>
   <main class="wrap" style="padding-top:22px;padding-bottom:64px;">
     <PageTopbar leftLink={leftLink} rightLinks={rightLinks} />
 

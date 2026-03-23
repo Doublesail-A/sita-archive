@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import PageTopbar from "../components/PageTopbar.astro";
-import { DEFAULT_PAGE_LINKS, SITE_TITLE, type SiteLink } from "../lib/site";
+import { DEFAULT_PAGE_LINKS, SITE_TITLE, buildBreadcrumbJsonLd, mergeKeywords, type SiteLink } from "../lib/site";
 
 interface Props {
   title: string;
@@ -12,6 +12,11 @@ interface Props {
   backLabel?: string;
   leftLink?: SiteLink;
   rightLinks?: SiteLink[];
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
+  cover?: string;
+  schemaType?: string;
 }
 
 const {
@@ -23,10 +28,46 @@ const {
   backLabel,
   leftLink = { href: "/", label: "home" },
   rightLinks = DEFAULT_PAGE_LINKS,
+  publishedTime,
+  modifiedTime,
+  tags = [],
+  cover,
+  schemaType = "Article",
 } = Astro.props as Props;
+
+const pathname = Astro.url.pathname;
+const pageKeywords = mergeKeywords([title, ...tags]);
+const crumbs = [
+  { name: "首页", path: "/" },
+  ...(leftLink.href !== "/" ? [{ name: leftLink.label, path: leftLink.href }] : []),
+  { name: title, path: pathname },
+];
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": schemaType,
+  headline: title,
+  description,
+  url: new URL(pathname, Astro.site).toString(),
+  inLanguage: "zh-CN",
+  datePublished: publishedTime,
+  dateModified: modifiedTime ?? publishedTime,
+  image: cover ? [new URL(cover, Astro.site).toString()] : undefined,
+  keywords: pageKeywords.join(", "),
+  mainEntityOfPage: new URL(pathname, Astro.site).toString(),
+};
+const jsonLd = [articleJsonLd, buildBreadcrumbJsonLd(crumbs)];
 ---
 
-<BaseLayout title={`${title} · ${SITE_TITLE}`} description={description}>
+<BaseLayout
+  title={`${title} · ${SITE_TITLE}`}
+  description={description}
+  keywords={pageKeywords}
+  image={cover}
+  ogType="article"
+  publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
+  jsonLd={jsonLd}
+>
   <main class="wrap article-page">
     <PageTopbar leftLink={leftLink} rightLinks={rightLinks} />
 

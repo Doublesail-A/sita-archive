@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import HomeFooter from "../components/HomeFooter.astro";
 import HomeCollectionSection from "../components/HomeCollectionSection.astro";
 import { getImportantHomeCards, getMovieEntries } from "../lib/content";
-import { HOME_DESKTOP_LINKS, SITE_DESCRIPTION, SITE_TITLE } from "../lib/site";
+import { HOME_DESKTOP_LINKS, SITE_DESCRIPTION, SITE_TITLE, SITE_KEYWORDS, buildBreadcrumbJsonLd } from "../lib/site";
 import { toAssetSrc } from "../lib/format";
 
 import logoInline from "../img/logo/logo.svg?raw";
@@ -23,9 +23,29 @@ const [newsItems, wikiItems, doujinItems, storiesItems, movies] = await Promise.
   getImportantHomeCards("stories", 3),
   getMovieEntries(),
 ]);
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: new URL(Astro.url.pathname, Astro.site).toString(),
+    inLanguage: "zh-CN",
+    keywords: SITE_KEYWORDS.join(", "),
+    hasPart: [
+      { "@type": "WebPageElement", name: "news", url: new URL("/#news", Astro.site).toString() },
+      { "@type": "WebPageElement", name: "movies", url: new URL("/#movies", Astro.site).toString() },
+      { "@type": "WebPageElement", name: "wiki", url: new URL("/#wiki", Astro.site).toString() },
+      { "@type": "WebPageElement", name: "doujin", url: new URL("/#doujin", Astro.site).toString() },
+      { "@type": "WebPageElement", name: "stories", url: new URL("/#stories", Astro.site).toString() },
+    ],
+  },
+  buildBreadcrumbJsonLd([{ name: "首页", path: "/" }]),
+];
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} keywords={SITE_KEYWORDS} jsonLd={jsonLd}>
   <header class="hero" id="top">
     <div class="hero-nav">
       <div class="hero-nav__row">

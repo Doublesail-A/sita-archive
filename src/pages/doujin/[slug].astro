@@ -13,6 +13,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await entry.render();
+const modifiedTime = (entry.data.pubDate ?? entry.data.date)?.toISOString?.();
 ---
 
 <ArticlePageLayout
@@ -23,6 +24,10 @@ const { Content } = await entry.render();
   backHref="/doujin/"
   backLabel="返回 doujin"
   leftLink={{ href: "/doujin/", label: "doujin" }}
+  modifiedTime={modifiedTime}
+  tags={entry.data.tags ?? []}
+  cover={entry.data.cover}
+  schemaType="CreativeWork"
 >
   <Content />
 </ArticlePageLayout>

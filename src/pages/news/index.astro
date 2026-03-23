@@ -6,6 +6,6 @@ import { getCollectionCards } from "../../lib/content";
 const items = await getCollectionCards("news");
 ---
 
-<SectionPageLayout title="News" description="汐塔站内新闻与动态索引。" heading="news">
+<SectionPageLayout title="News" description="汐塔站内新闻与动态索引。" heading="news" keywords={["汐塔新闻", "云上邮差", "潮汐之塔"]}>
   <ContentIndexList items={items} emptyText="这里还没有 news 条目。" />
 </SectionPageLayout>

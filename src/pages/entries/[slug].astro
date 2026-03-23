@@ -20,6 +20,9 @@ const description = entry.data.summary;
   description={description}
   backHref="/entries/"
   backLabel="返回设定词条"
+  leftLink={{ href: "/entries/", label: "entries" }}
+  tags={entry.data.tags ?? []}
+  schemaType="DefinedTerm"
 >
   {entry.data.tags?.length ? <p>标签：{entry.data.tags.join(" / ")}</p> : null}
   <Content />

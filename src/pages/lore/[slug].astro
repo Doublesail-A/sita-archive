@@ -12,6 +12,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await entry.render();
+const modifiedTime = entry.data.date?.toISOString?.();
 ---
 
 <ArticlePageLayout
@@ -19,6 +20,10 @@ const { Content } = await entry.render();
   description={entry.data.summary}
   backHref="/lore/"
   backLabel="返回世界观"
+  leftLink={{ href: "/lore/", label: "lore" }}
+  modifiedTime={modifiedTime}
+  tags={entry.data.tags ?? []}
+  schemaType="Article"
 >
   <Content />
 </ArticlePageLayout>

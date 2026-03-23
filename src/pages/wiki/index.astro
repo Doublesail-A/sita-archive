@@ -3,7 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageTopbar from "../../components/PageTopbar.astro";
 import { getCollectionCards } from "../../lib/content";
 import { formatDate } from "../../lib/format";
-import { DEFAULT_PAGE_LINKS } from "../../lib/site";
+import { DEFAULT_PAGE_LINKS, SITE_TITLE, buildBreadcrumbJsonLd, mergeKeywords } from "../../lib/site";
 
 const entries = await getCollectionCards("wiki");
 const items = entries.map((entry) => ({
@@ -14,9 +14,26 @@ const items = entries.map((entry) => ({
   cover: entry.cover,
   hasPreview: entry.hasPreview,
 }));
+
+const pageKeywords = mergeKeywords(["汐塔wiki", "汐塔同人", "潮汐之塔", "云海逐鲸"]);
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `Wiki · ${SITE_TITLE}`,
+    description: "汐塔世界观条目索引。",
+    url: new URL(Astro.url.pathname, Astro.site).toString(),
+    inLanguage: "zh-CN",
+    keywords: pageKeywords.join(", "),
+  },
+  buildBreadcrumbJsonLd([
+    { name: "首页", path: "/" },
+    { name: "wiki", path: "/wiki/" },
+  ]),
+];
 ---
 
-<BaseLayout title="Wiki · 汐塔 | 云海之上" description="汐塔世界观条目索引。">
+<BaseLayout title={`Wiki · ${SITE_TITLE}`} description="汐塔世界观条目索引。" keywords={pageKeywords} jsonLd={jsonLd}>
   <main class="wrap wiki-page">
     <PageTopbar leftLink={{ href: "/", label: "home" }} rightLinks={DEFAULT_PAGE_LINKS} />
 

@@ -13,6 +13,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await entry.render();
+const publishedTime = (entry.data.pubDate ?? entry.data.date)?.toISOString?.();
 ---
 
 <ArticlePageLayout
@@ -22,6 +23,12 @@ const { Content } = await entry.render();
   metaValue={formatDate(entry.data.pubDate ?? entry.data.date)}
   backHref="/news/"
   backLabel="返回 news"
+  leftLink={{ href: "/news/", label: "news" }}
+  publishedTime={publishedTime}
+  modifiedTime={publishedTime}
+  tags={entry.data.tags ?? []}
+  cover={entry.data.cover}
+  schemaType="NewsArticle"
 >
   <Content />
 </ArticlePageLayout>

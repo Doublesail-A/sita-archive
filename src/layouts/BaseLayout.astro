@@ -1,18 +1,54 @@
 ---
 import "../styles/global.css";
-import { SITE_DESCRIPTION, SITE_TITLE } from "../lib/site";
+import {
+  DEFAULT_SOCIAL_IMAGE,
+  DEFAULT_THEME_COLOR,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
+  buildOrganizationJsonLd,
+  buildWebsiteJsonLd,
+  mergeKeywords,
+} from "../lib/site";
 
 interface Props {
   title?: string;
   description?: string;
   bodyClass?: string;
+  keywords?: string[];
+  image?: string;
+  canonical?: string;
+  ogType?: string;
+  noindex?: boolean;
+  publishedTime?: string;
+  modifiedTime?: string;
+  jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
 const {
   title = SITE_TITLE,
   description = SITE_DESCRIPTION,
   bodyClass = "",
+  keywords = [],
+  image,
+  canonical,
+  ogType = "website",
+  noindex = false,
+  publishedTime,
+  modifiedTime,
+  jsonLd,
 } = Astro.props as Props;
+
+const siteRoot = Astro.site ?? new URL(SITE_URL);
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteRoot).toString();
+const socialImage = new URL(image ?? DEFAULT_SOCIAL_IMAGE, siteRoot).toString();
+const allKeywords = mergeKeywords(keywords);
+const extraJsonLd = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
+const structuredData = [buildWebsiteJsonLd(), buildOrganizationJsonLd(), ...extraJsonLd];
+const robotsContent = noindex
+  ? "noindex,nofollow"
+  : "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
 ---
 
 <!doctype html>
@@ -21,9 +57,35 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content={robotsContent} />
+    <meta name="keywords" content={allKeywords.join(", ")} />
+    <meta name="theme-color" content={DEFAULT_THEME_COLOR} />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>{title}</title>
     {description ? <meta name="description" content={description} /> : null}
+    <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE_NAME} RSS`} href={new URL("/rss.xml", siteRoot).toString()} />
+
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    {description ? <meta property="og:description" content={description} /> : null}
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImage} />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    {description ? <meta name="twitter:description" content={description} /> : null}
+    <meta name="twitter:image" content={socialImage} />
+
+    {publishedTime ? <meta property="article:published_time" content={publishedTime} /> : null}
+    {modifiedTime ? <meta property="article:modified_time" content={modifiedTime} /> : null}
+
+    {structuredData.map((item) => (
+      <script type="application/ld+json" set:html={JSON.stringify(item)}></script>
+    ))}
   </head>
 
   <body class={bodyClass}>
