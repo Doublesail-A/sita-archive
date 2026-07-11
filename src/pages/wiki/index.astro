@@ -70,7 +70,7 @@ const jsonLd = [
         <div class="empty-note">这里还没有 wiki 条目。</div>
       ) : (
         items.map((item) => (
-          <a class:list={["wiki-row", item.cover && "wiki-row--with-cover"]} href={item.url}>
+          <a class:list={["wiki-row", item.hasPreview && item.cover && "wiki-row--with-cover"]} href={item.url}>
             <div class="wiki-row__date">{item.date}</div>
             <div class="wiki-row__main">
               {item.hasPreview && item.cover ? (

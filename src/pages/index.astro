@@ -18,8 +18,7 @@ const [news, movies, wiki, doujin] = await Promise.all([
   getCollectionCards("doujin"),
 ]);
 
-const publishedNews = news.filter((item) => item.slug !== "2026-01-09-init");
-const latestNews = publishedNews.slice(0, 4);
+const latestNews = news.slice(0, 4);
 const featuredMovies = movies.slice(0, 2).map((movie) => ({
   ...movie,
   bvid:
@@ -61,7 +60,10 @@ const jsonLd = [
       </picture>
       <div class="home-hero__wash" aria-hidden="true"></div>
       <div class="home-hero__content">
-        <div class="home-hero__logo" set:html={logoInline} aria-label="汐塔"></div>
+        <h1 class="home-hero__logo">
+          <span class="home-hero__logo-mark" set:html={logoInline} aria-hidden="true"></span>
+          <span class="sr-only">汐塔 Cetus wiki</span>
+        </h1>
         <p class="home-hero__lead">自天空坠落云海，随潮汐回归彼岸</p>
         <div class="home-hero__actions">
           <a class="button button--light" href="#news">NEWS</a>
@@ -188,7 +190,7 @@ const jsonLd = [
       <a href="/wiki/" data-reveal><span>02</span><strong>WIKI</strong><b>↗</b></a>
       <a href="/doujin/" data-reveal><span>03</span><strong>DOUJIN</strong><b>↗</b></a>
       <a href="/stories/" data-reveal><span>04</span><strong>STORIES</strong><b>↗</b></a>
-      <a href="/music" data-reveal><span>05</span><strong>MUSIC</strong><b>↗</b></a>
+      <a href="/music/" data-reveal><span>05</span><strong>MUSIC</strong><b>↗</b></a>
       <a href="/about/" data-reveal><span>06</span><strong>ABOUT</strong><b>↗</b></a>
     </nav>
   </main>

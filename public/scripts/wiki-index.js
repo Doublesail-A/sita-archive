@@ -41,7 +41,7 @@
 
     for (const item of items) {
       const anchor = document.createElement("a");
-      anchor.className = "wiki-row";
+      anchor.className = item.hasPreview && item.cover ? "wiki-row wiki-row--with-cover" : "wiki-row";
       anchor.href = item.url;
 
       const date = document.createElement("div");

@@ -79,7 +79,7 @@ export const DEFAULT_PAGE_LINKS: SiteLink[] = [
   { href: "/wiki/", label: "WIKI" },
   { href: "/doujin/", label: "DOUJIN" },
   { href: "/stories/", label: "STORIES" },
-  { href: "/music", label: "MUSIC" },
+  { href: "/music/", label: "MUSIC" },
   { href: "/about/", label: "ABOUT" },
 ];
 
@@ -92,6 +92,6 @@ export const FOOTER_LINKS: SiteLink[] = [
   { href: "/wiki/", label: "WIKI" },
   { href: "/doujin/", label: "DOUJIN" },
   { href: "/stories/", label: "STORIES" },
-  { href: "/music", label: "MUSIC" },
+  { href: "/music/", label: "MUSIC" },
   { href: "/about/", label: "ABOUT" },
 ];
