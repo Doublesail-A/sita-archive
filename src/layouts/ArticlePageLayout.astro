@@ -18,6 +18,7 @@ interface Props {
   modifiedTime?: string;
   tags?: string[];
   cover?: string;
+  showCover?: boolean;
   schemaType?: string;
 }
 
@@ -34,10 +35,13 @@ const {
   modifiedTime,
   tags = [],
   cover,
+  showCover = true,
   schemaType = "Article",
 } = Astro.props as Props;
 
 const pathname = Astro.url.pathname;
+const routeRoot = pathname.split("/").filter(Boolean)[0] ?? "about";
+const theme = routeRoot === "entries" || routeRoot === "lore" ? "wiki" : routeRoot === "tag" ? "neutral" : routeRoot;
 const pageKeywords = mergeKeywords([title, ...tags]);
 const crumbs = [
   { name: "首页", path: "/" },
@@ -69,9 +73,10 @@ const jsonLd = [articleJsonLd, buildBreadcrumbJsonLd(crumbs)];
   publishedTime={publishedTime}
   modifiedTime={modifiedTime}
   jsonLd={jsonLd}
+  bodyClass={`theme-${theme}`}
 >
   <SiteHeader />
-  <main class="article-page" id="main-content">
+  <main class:list={["article-page", `theme-${theme}`]} id="main-content">
     <div class="article-wrap"><PageTopbar leftLink={leftLink} rightLinks={rightLinks} /></div>
     <article class="article">
       <header class="article-head">
@@ -82,7 +87,7 @@ const jsonLd = [articleJsonLd, buildBreadcrumbJsonLd(crumbs)];
           {description ? <p class="article-desc">{description}</p> : null}
         </div>
       </header>
-      {cover ? <img class="article-cover" src={cover} alt="" /> : null}
+      {cover && showCover ? <img class="article-cover" src={cover} alt="" /> : null}
       <div class="article-wrap">
         <div class="prose"><slot /></div>
         {backHref && backLabel ? <footer class="article-foot"><a class="pill-ink" href={backHref}>{backLabel}</a></footer> : null}

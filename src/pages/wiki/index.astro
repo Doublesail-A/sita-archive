@@ -35,9 +35,9 @@ const jsonLd = [
 ];
 ---
 
-<BaseLayout title={`Wiki · ${SITE_TITLE}`} description="汐塔世界观条目索引。" keywords={pageKeywords} jsonLd={jsonLd}>
+<BaseLayout title={`Wiki · ${SITE_TITLE}`} description="汐塔世界观条目索引。" keywords={pageKeywords} jsonLd={jsonLd} bodyClass="theme-wiki">
   <SiteHeader />
-  <main class="wiki-page" id="main-content">
+  <main class="wiki-page theme-wiki" id="main-content">
     <header class="page-hero">
       <div class="page-hero__inner">
         <p class="eyebrow eyebrow--light">FIELD GUIDE / WORLD ARCHIVE</p>
@@ -70,7 +70,7 @@ const jsonLd = [
         <div class="empty-note">这里还没有 wiki 条目。</div>
       ) : (
         items.map((item) => (
-          <a class="wiki-row" href={item.url}>
+          <a class:list={["wiki-row", item.cover && "wiki-row--with-cover"]} href={item.url}>
             <div class="wiki-row__date">{item.date}</div>
             <div class="wiki-row__main">
               {item.hasPreview && item.cover ? (

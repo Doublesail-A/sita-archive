@@ -30,6 +30,8 @@ const {
 } = Astro.props as Props;
 
 const pathname = Astro.url.pathname;
+const routeRoot = pathname.split("/").filter(Boolean)[0] ?? "about";
+const theme = routeRoot === "entries" || routeRoot === "lore" ? "wiki" : routeRoot === "tag" ? "neutral" : routeRoot;
 const pageKeywords = mergeKeywords([title, heading, ...keywords]);
 const jsonLd = [
   {
@@ -48,9 +50,9 @@ const jsonLd = [
 ];
 ---
 
-<BaseLayout title={`${title} · ${SITE_TITLE}`} description={description} keywords={pageKeywords} jsonLd={jsonLd} noindex={noindex}>
+<BaseLayout title={`${title} · ${SITE_TITLE}`} description={description} keywords={pageKeywords} jsonLd={jsonLd} noindex={noindex} bodyClass={`theme-${theme}`}>
   <SiteHeader />
-  <main class="page-main" id="main-content">
+  <main class:list={["page-main", `theme-${theme}`]} id="main-content">
     <header class="page-hero">
       <div class="page-hero__inner">
         <p class="eyebrow eyebrow--light">CETUS ARCHIVE / COLLECTION</p>

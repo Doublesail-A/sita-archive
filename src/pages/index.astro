@@ -8,21 +8,18 @@ import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, buildBreadcrumbJsonLd } fr
 
 import heroDesktop from "../img/main/desktop/03.webp";
 import heroMobile from "../img/main/mobile/08.webp";
-import worldImage from "../img/main/desktop/01.webp";
 import worldArchiveImage from "../img/main/desktop/04.webp";
 import logoInline from "../img/logo/logo.svg?raw";
 
-const [news, movies, entries, wiki, doujin] = await Promise.all([
+const [news, movies, wiki, doujin] = await Promise.all([
   getCollectionCards("news"),
   getMovieEntries(),
-  getCollectionCards("entries"),
   getCollectionCards("wiki"),
   getCollectionCards("doujin"),
 ]);
 
 const publishedNews = news.filter((item) => item.slug !== "2026-01-09-init");
 const latestNews = publishedNews.slice(0, 4);
-const latestSignal = latestNews[0];
 const featuredMovies = movies.slice(0, 2).map((movie) => ({
   ...movie,
   bvid:
@@ -31,7 +28,7 @@ const featuredMovies = movies.slice(0, 2).map((movie) => ({
       "xita-yunshangyoucha": "BV1894y167kr",
     } as Record<string, string>)[movie.slug] ?? movie.link.match(/BV[a-zA-Z0-9]+/)?.[0],
 }));
-const worldEntries = entries.slice(0, 3);
+const worldEntries = wiki.slice(0, 3);
 const latestDoujin = doujin.slice(0, 4);
 
 const jsonLd = [
@@ -71,40 +68,11 @@ const jsonLd = [
           <a class="button button--glass" href="/wiki/">WIKI</a>
         </div>
       </div>
-      <div class="home-hero__orb" aria-hidden="true"></div>
       <div class="home-hero__caption" aria-hidden="true">
         <span>42 / CETUS</span>
         <span>ABOVE THE CLOUD SEA</span>
       </div>
-      <a class="scroll-cue" href="#signal" aria-label="向下浏览"><span></span>SCROLL</a>
-    </section>
-
-    {latestSignal ? (
-      <aside class="dispatch-strip" id="signal" aria-label="最新动态">
-        <span class="dispatch-strip__label">NEW</span>
-        <a href={latestSignal.url}>
-          <time>{formatDate(latestSignal.date)}</time>
-          <strong>{latestSignal.title}</strong>
-          <span>READ ↗</span>
-        </a>
-        <a class="dispatch-strip__official" href="https://space.bilibili.com/3493270525053175/dynamic" target="_blank" rel="noreferrer">OFFICIAL ↗</a>
-      </aside>
-    ) : null}
-
-    <section class="manifesto-section" aria-label="汐塔世界" data-reveal>
-      <div class="manifesto-section__copy section-pad">
-        <p class="micro-label">CETUS / WORLD</p>
-        <h1>云海之上，<br /><em>孤岛新生。</em></h1>
-        <dl>
-          <div><dt>{wiki.length}</dt><dd>WIKI</dd></div>
-          <div><dt>{doujin.length}</dt><dd>DOUJIN</dd></div>
-          <div><dt>{publishedNews.length}</dt><dd>NEWS</dd></div>
-        </dl>
-      </div>
-      <div class="manifesto-section__image" data-parallax>
-        <img src={toAssetSrc(worldImage)} alt="潮汐塔与探险者" loading="lazy" />
-        <span aria-hidden="true">汐塔</span>
-      </div>
+      <a class="scroll-cue" href="#news" aria-label="向下浏览"><span></span>SCROLL</a>
     </section>
 
     <section class="news-section section-pad" id="news" aria-labelledby="news-title">
@@ -190,7 +158,7 @@ const jsonLd = [
                 <b aria-hidden="true">↗</b>
               </a>
             ))}
-            <a class="world-feature__all" href="/entries/">ALL ENTRIES <b>↗</b></a>
+            <a class="world-feature__all" href="/wiki/">ALL ENTRIES <b>↗</b></a>
           </div>
         </div>
       </div>
@@ -198,7 +166,7 @@ const jsonLd = [
 
     <section class="doujin-section" id="doujin" aria-labelledby="doujin-title">
       <div class="doujin-section__inner section-pad">
-        <header class="section-title section-title--light" data-reveal>
+        <header class="section-title" data-reveal>
           <p class="micro-label">FAN CREATIONS</p>
           <h2 id="doujin-title">DOUJIN</h2>
           <a href="/doujin/">ALL WORKS ↗</a>
@@ -215,11 +183,13 @@ const jsonLd = [
       </div>
     </section>
 
-    <nav class="route-grid" aria-label="档案分类">
+    <nav class="route-grid" aria-label="网站模块">
       <a href="/news/" data-reveal><span>01</span><strong>NEWS</strong><b>↗</b></a>
       <a href="/wiki/" data-reveal><span>02</span><strong>WIKI</strong><b>↗</b></a>
       <a href="/doujin/" data-reveal><span>03</span><strong>DOUJIN</strong><b>↗</b></a>
-      <a href="/music" data-reveal><span>04</span><strong>MUSIC</strong><b>↗</b></a>
+      <a href="/stories/" data-reveal><span>04</span><strong>STORIES</strong><b>↗</b></a>
+      <a href="/music" data-reveal><span>05</span><strong>MUSIC</strong><b>↗</b></a>
+      <a href="/about/" data-reveal><span>06</span><strong>ABOUT</strong><b>↗</b></a>
     </nav>
   </main>
 

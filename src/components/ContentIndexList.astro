@@ -15,7 +15,7 @@ const { items, emptyText = "这里还没有条目。" } = Astro.props as Props;
     <div class="empty-note">{emptyText}</div>
   ) : (
     items.map((item) => (
-      <a class:list={["entry-index-item", item.hasPreview && "entry-index-item--with-cover"]} href={item.url}>
+      <a class:list={["entry-index-item", item.cover && "entry-index-item--with-cover"]} href={item.url}>
         <div class="entry-index-item__date">{formatDate(item.date)}</div>
         <div class="entry-index-item__main">
           {item.cover ? (
