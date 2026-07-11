@@ -1,6 +1,6 @@
 import { defineConfig } from "astro/config";
 
 export default defineConfig({
-  site: "https://cetus.wiki",
+  site: "https://www.cetus.wiki",
   trailingSlash: "always",
 });

@@ -1,6 +1,6 @@
-# 汐塔档案 · Cetus Archive
+# 汐塔 Cetus wiki
 
-<https://cetus.wiki> 的源代码。非官方汐塔资料与创作整理站，基于 Astro 4 构建并由 Vercel 部署。
+<https://www.cetus.wiki> 的源代码。非官方汐塔资料与创作整理站，基于 Astro 4 构建并由 Vercel 部署。
 
 ## 架构
 
@@ -46,7 +46,7 @@ cover: /images/news/2026-07-11-example.jpg
 
 - `important` 会把内容标记为重点记录；
 - 配图放在 `public/images/news/`，`cover` 使用以 `/images/` 开头的站内路径；
-- 日期和活动规则必须以官方原始动态为准；不确定的信息请明确标注为推测。
+- 日期、标题和正文必须以官方原始动态为准；没有来源的内容先留空，不补写说明性段落。
 
 ## 新增世界观词条
 
