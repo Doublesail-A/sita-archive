@@ -28,6 +28,7 @@ const publishedTime = (entry.data.pubDate ?? entry.data.date)?.toISOString?.();
   modifiedTime={publishedTime}
   tags={entry.data.tags ?? []}
   cover={entry.data.cover}
+  showCover={false}
   schemaType="NewsArticle"
 >
   <Content />

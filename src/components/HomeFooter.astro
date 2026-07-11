@@ -25,6 +25,7 @@ const socialLinks = [
       </nav>
     </div>
     <div class="footer-social" aria-label="汐塔官方社交平台">
+      <span class="footer-social__label">官方社媒</span>
       {socialLinks.map((link) => (
         <a href={link.href} target="_blank" rel="noreferrer" aria-label={link.label} title={link.label}>
           {link.icon === "bilibili" ? (
@@ -44,7 +45,7 @@ const socialLinks = [
     <div class="footer-meta">
       <span>非官方同人站点</span>
       <a href={`mailto:${OWNER_EMAIL}`}>CONTACT ↗</a>
-      <span>© 2026 CETUS</span>
+      <span>© 2026 CETUS WIKI</span>
     </div>
   </div>
 </footer>
