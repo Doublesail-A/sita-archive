@@ -1,0 +1,49 @@
+---
+import { DEFAULT_PAGE_LINKS } from "../lib/site";
+
+interface Props {
+  overlay?: boolean;
+}
+
+const { overlay = false } = Astro.props as Props;
+---
+
+<header class:list={["site-header", overlay && "site-header--overlay"]} data-site-header>
+  <a class="skip-link" href="#main-content">跳到正文</a>
+  <div class="site-header__inner">
+    <a class="site-brand" href="/" aria-label="汐塔 Cetus 首页">
+      <span class="site-brand__mark">C</span>
+      <span class="site-brand__name">CETUS</span>
+      <span class="site-brand__cn">汐塔档案</span>
+    </a>
+
+    <nav class="site-nav" aria-label="主导航">
+      {DEFAULT_PAGE_LINKS.map((link) => (
+        <a href={link.href}>{link.label}</a>
+      ))}
+    </nav>
+
+    <div class="site-header__actions">
+      <a class="official-link" href="https://space.bilibili.com/3493270525053175/dynamic" target="_blank" rel="noreferrer">
+        官方动态 <span aria-hidden="true">↗</span>
+      </a>
+      <details class="mobile-menu">
+        <summary aria-label="打开导航菜单"><span></span><span></span></summary>
+        <nav aria-label="移动端导航">
+          {DEFAULT_PAGE_LINKS.map((link) => (
+            <a href={link.href}>{link.label}</a>
+          ))}
+          <a href="https://space.bilibili.com/3493270525053175/dynamic" target="_blank" rel="noreferrer">官方动态 ↗</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<script>
+  const menu = document.querySelector<HTMLDetailsElement>(".mobile-menu");
+  document.addEventListener("click", (event) => {
+    if (!menu?.open || menu.contains(event.target as Node)) return;
+    menu.removeAttribute("open");
+  });
+</script>

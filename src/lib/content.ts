@@ -27,7 +27,7 @@ export type MovieCard = {
   link: string;
 };
 
-const TAGGABLE_COLLECTIONS: SiteCollection[] = ["news", "wiki", "stories", "doujin", "entries", "lore"];
+const TAGGABLE_COLLECTIONS: SiteCollection[] = ["news", "wiki", "doujin", "entries", "lore"];
 
 function getTags(data: Record<string, unknown>): string[] {
   return Array.isArray(data.tags) ? data.tags.filter((tag): tag is string => typeof tag === "string") : [];

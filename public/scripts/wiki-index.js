@@ -18,7 +18,12 @@
     data = [];
   }
 
-  const normalize = (value) => String(value || "").trim().replace(/\s+/g, "").toLowerCase();
+  // 中文检索做轻量宽松化：忽略空格、书名号和常见连接词，
+  // 让“潮汐塔”也能命中“潮汐之塔”。
+  const normalize = (value) => String(value || "")
+    .trim()
+    .replace(/[\s的之·|《》【】（）()｜\-]/g, "")
+    .toLowerCase();
 
   const render = (items, query) => {
     listEl.innerHTML = "";
