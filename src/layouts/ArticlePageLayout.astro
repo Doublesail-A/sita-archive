@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import PageTopbar from "../components/PageTopbar.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import HomeFooter from "../components/HomeFooter.astro";
 import { DEFAULT_PAGE_LINKS, SITE_TITLE, buildBreadcrumbJsonLd, mergeKeywords, type SiteLink } from "../lib/site";
 
 interface Props {
@@ -68,29 +70,24 @@ const jsonLd = [articleJsonLd, buildBreadcrumbJsonLd(crumbs)];
   modifiedTime={modifiedTime}
   jsonLd={jsonLd}
 >
-  <main class="wrap article-page">
-    <PageTopbar leftLink={leftLink} rightLinks={rightLinks} />
-
+  <SiteHeader />
+  <main class="article-page" id="main-content">
+    <div class="article-wrap"><PageTopbar leftLink={leftLink} rightLinks={rightLinks} /></div>
     <article class="article">
       <header class="article-head">
-        <h1 class="article-title">{title}</h1>
-        {metaLabel ? (
-          <div class="article-meta">
-            <span class="article-date">{metaLabel}：{metaValue ?? "—"}</span>
-          </div>
-        ) : null}
-        {description ? <p class="article-desc">{description}</p> : null}
+        <div class="article-wrap">
+          <p class="eyebrow">CETUS ARCHIVE / RECORD</p>
+          <h1 class="article-title">{title}</h1>
+          {metaLabel ? <div class="article-meta"><span class="article-date">{metaLabel}：{metaValue ?? "—"}</span></div> : null}
+          {description ? <p class="article-desc">{description}</p> : null}
+        </div>
       </header>
-
-      <div class="prose">
-        <slot />
+      {cover ? <img class="article-cover" src={cover} alt="" /> : null}
+      <div class="article-wrap">
+        <div class="prose"><slot /></div>
+        {backHref && backLabel ? <footer class="article-foot"><a class="pill-ink" href={backHref}>{backLabel}</a></footer> : null}
       </div>
-
-      {backHref && backLabel ? (
-        <footer class="article-foot">
-          <a class="pill-ink" href={backHref}>{backLabel}</a>
-        </footer>
-      ) : null}
     </article>
   </main>
+  <HomeFooter />
 </BaseLayout>

@@ -5,19 +5,25 @@ import { FOOTER_LINKS, OWNER_EMAIL } from "../lib/site";
 ---
 
 <footer class="footer">
-  <img class="footer-img" src={toAssetSrc(footImg)} alt="" aria-hidden="true" />
+  <div class="footer-visual">
+    <img class="footer-img" src={toAssetSrc(footImg)} alt="云海中的城邦" loading="lazy" />
+    <p>THE LIGHTHOUSE IS STILL LISTENING.</p>
+  </div>
   <div class="footer-content">
-    <div class="footer-inner">
+    <div class="footer-main">
+      <div>
+        <p class="eyebrow">CETUS ARCHIVE · 42</p>
+        <h2>随潮汐回归彼岸。</h2>
+        <p class="footer-about">由爱好者维护的非官方汐塔资料与创作档案。本站与官方无隶属关系。</p>
+      </div>
       <div class="footer-links">
-        {FOOTER_LINKS.map((link) => (
-          <a href={link.href}>{link.label}</a>
-        ))}
+        {FOOTER_LINKS.map((link) => <a href={link.href}>{link.label}</a>)}
       </div>
-
-      <div class="footer-mini">
-        <div>非官方同人站点</div>
-        <div><a href={`mailto:${OWNER_EMAIL}`}>联系站长</a></div>
-      </div>
+    </div>
+    <div class="footer-meta">
+      <span>© 2026 CETUS ARCHIVE</span>
+      <a href={`mailto:${OWNER_EMAIL}`}>联系 / 投稿</a>
+      <a href="https://github.com/Doublesail-A/sita-archive" target="_blank" rel="noreferrer">GitHub ↗</a>
     </div>
   </div>
 </footer>

@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import PageTopbar from "../components/PageTopbar.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import HomeFooter from "../components/HomeFooter.astro";
 import { DEFAULT_PAGE_LINKS, SITE_TITLE, buildBreadcrumbJsonLd, mergeKeywords, type SiteLink } from "../lib/site";
 
 interface Props {
@@ -45,16 +47,23 @@ const jsonLd = [
 ---
 
 <BaseLayout title={`${title} · ${SITE_TITLE}`} description={description} keywords={pageKeywords} jsonLd={jsonLd}>
-  <main class="wrap" style="padding-top:22px;padding-bottom:64px;">
-    <PageTopbar leftLink={leftLink} rightLinks={rightLinks} />
-
-    <section class="section" style="padding-top:24px;">
+  <SiteHeader />
+  <main class="page-main" id="main-content">
+    <header class="page-hero">
+      <div class="page-hero__inner">
+        <p class="eyebrow eyebrow--light">CETUS ARCHIVE / COLLECTION</p>
+        <h1>{heading}</h1>
+        {description ? <p>{description}</p> : null}
+      </div>
+    </header>
+    <section class="page-content">
+      <PageTopbar leftLink={leftLink} rightLinks={rightLinks} />
       <div class="section-head">
-        <h2 class="h2">{heading}</h2>
+        <h2 class="h2">档案列表</h2>
         <a class="more" href={backHref}>{backLabel}</a>
       </div>
-
       <slot />
     </section>
   </main>
+  <HomeFooter />
 </BaseLayout>

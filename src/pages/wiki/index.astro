@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageTopbar from "../../components/PageTopbar.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import HomeFooter from "../../components/HomeFooter.astro";
 import { getCollectionCards } from "../../lib/content";
 import { formatDate } from "../../lib/format";
 import { DEFAULT_PAGE_LINKS, SITE_TITLE, buildBreadcrumbJsonLd, mergeKeywords } from "../../lib/site";
@@ -34,13 +36,19 @@ const jsonLd = [
 ---
 
 <BaseLayout title={`Wiki · ${SITE_TITLE}`} description="汐塔世界观条目索引。" keywords={pageKeywords} jsonLd={jsonLd}>
-  <main class="wrap wiki-page">
-    <PageTopbar leftLink={{ href: "/", label: "home" }} rightLinks={DEFAULT_PAGE_LINKS} />
-
-    <section class="page-head">
-      <h1 class="page-title">Wiki</h1>
-      <p class="page-subtitle">搜索标题与简介。支持中文关键词。</p>
-      <p class="page-subtitle" style="margin-top:6px;">检测到条目数：{items.length}</p>
+  <SiteHeader />
+  <main class="wiki-page" id="main-content">
+    <header class="page-hero">
+      <div class="page-hero__inner">
+        <p class="eyebrow eyebrow--light">FIELD GUIDE / WORLD ARCHIVE</p>
+        <h1>世界档案</h1>
+        <p>从云海、潮汐与鲸开始，检索这个世界的地点、职业、设备和生物。</p>
+      </div>
+    </header>
+    <div class="page-content">
+      <PageTopbar leftLink={{ href: "/", label: "返回首页" }} rightLinks={DEFAULT_PAGE_LINKS} />
+      <section class="page-head">
+      <p class="eyebrow">SEARCH {items.length} RECORDS</p>
 
       <div class="wiki-search">
         <input
@@ -55,9 +63,9 @@ const jsonLd = [
       </div>
 
       <div id="wikiSearchHint" class="wiki-search__hint">共 {items.length} 条</div>
-    </section>
+      </section>
 
-    <section class="wiki-index" id="wikiIndex">
+      <section class="wiki-index" id="wikiIndex">
       {items.length === 0 ? (
         <div class="empty-note">这里还没有 wiki 条目。</div>
       ) : (
@@ -77,9 +85,11 @@ const jsonLd = [
           </a>
         ))
       )}
-    </section>
+      </section>
 
-    <script id="wikiIndexData" type="application/json" set:html={JSON.stringify(items)}></script>
-    <script src="/scripts/wiki-index.js" defer></script>
+      <script id="wikiIndexData" type="application/json" set:html={JSON.stringify(items)}></script>
+      <script src="/scripts/wiki-index.js" defer></script>
+    </div>
   </main>
+  <HomeFooter />
 </BaseLayout>

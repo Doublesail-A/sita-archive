@@ -7,13 +7,13 @@ export const SITE_URL = "https://cetus.wiki";
 export const SITE_DOMAIN = "cetus.wiki";
 export const SITE_NAME = "汐塔";
 export const SITE_ALT_NAME = "Cetus";
-export const SITE_TITLE = "汐塔 Cetus Wiki";
-export const SITE_DESCRIPTION = "自天空坠落云海，随潮汐回归彼岸。";
-export const SITE_SECTION_DESCRIPTION = "汐塔同人整理站，收录 news、movies、wiki、doujin、stories 与音乐页面。";
+export const SITE_TITLE = "汐塔档案 · Cetus Archive";
+export const SITE_DESCRIPTION = "云海之上的汐塔世界观、影像与同人创作档案。自天空坠落云海，随潮汐回归彼岸。";
+export const SITE_SECTION_DESCRIPTION = "非官方汐塔资料与创作档案，收录官方航报、世界观词条、影像、音乐与同人作品。";
 export const SITE_AUTHOR_NAME = "汐塔同人整理站";
 export const OWNER_EMAIL = "xwd2020@outlook.com";
-export const DEFAULT_THEME_COLOR = "#ece6da";
-export const DEFAULT_SOCIAL_IMAGE = "/favicon.svg";
+export const DEFAULT_THEME_COLOR = "#15232d";
+export const DEFAULT_SOCIAL_IMAGE = "/images/movies/yunhaizhujing.jpg";
 
 export const SITE_KEYWORDS = [
   "汐塔",
@@ -75,11 +75,11 @@ export function buildOrganizationJsonLd() {
 }
 
 export const DEFAULT_PAGE_LINKS: SiteLink[] = [
-  { href: "/news/", label: "news" },
-  { href: "/wiki/", label: "wiki" },
-  { href: "/doujin/", label: "doujin" },
-  { href: "/stories/", label: "stories" },
-  { href: "/about/", label: "about" },
+  { href: "/news/", label: "航报" },
+  { href: "/wiki/", label: "世界档案" },
+  { href: "/doujin/", label: "共创" },
+  { href: "/music", label: "声音" },
+  { href: "/about/", label: "关于" },
 ];
 
 export const HOME_DESKTOP_LINKS: SiteLink[] = [
@@ -93,11 +93,11 @@ export const HOME_DESKTOP_LINKS: SiteLink[] = [
 ];
 
 export const FOOTER_LINKS: SiteLink[] = [
-  { href: "/", label: "home" },
-  { href: "/news/", label: "news" },
-  { href: "/wiki/", label: "wiki" },
-  { href: "/doujin/", label: "doujin" },
-  { href: "/stories/", label: "stories" },
-  { href: "/music", label: "music" },
-  { href: "/about/", label: "about" },
+  { href: "/", label: "首页" },
+  { href: "/news/", label: "航报" },
+  { href: "/wiki/", label: "世界档案" },
+  { href: "/entries/", label: "核心设定" },
+  { href: "/doujin/", label: "共创作品" },
+  { href: "/music", label: "声音档案" },
+  { href: "/about/", label: "关于本站" },
 ];

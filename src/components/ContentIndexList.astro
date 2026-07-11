@@ -18,7 +18,7 @@ const { items, emptyText = "这里还没有条目。" } = Astro.props as Props;
       <a class:list={["entry-index-item", item.hasPreview && "entry-index-item--with-cover"]} href={item.url}>
         <div class="entry-index-item__date">{formatDate(item.date)}</div>
         <div class="entry-index-item__main">
-          {item.hasPreview && item.cover ? (
+          {item.cover ? (
             <div class="entry-index-item__cover-shell">
               <img class="entry-index-item__cover" src={item.cover} alt="" loading="lazy" />
             </div>
