@@ -14,6 +14,7 @@ interface Props {
   leftLink?: SiteLink;
   rightLinks?: SiteLink[];
   keywords?: string[];
+  noindex?: boolean;
 }
 
 const {
@@ -25,6 +26,7 @@ const {
   leftLink = { href: "/", label: "home" },
   rightLinks = DEFAULT_PAGE_LINKS,
   keywords = [],
+  noindex = false,
 } = Astro.props as Props;
 
 const pathname = Astro.url.pathname;
@@ -46,7 +48,7 @@ const jsonLd = [
 ];
 ---
 
-<BaseLayout title={`${title} · ${SITE_TITLE}`} description={description} keywords={pageKeywords} jsonLd={jsonLd}>
+<BaseLayout title={`${title} · ${SITE_TITLE}`} description={description} keywords={pageKeywords} jsonLd={jsonLd} noindex={noindex}>
   <SiteHeader />
   <main class="page-main" id="main-content">
     <header class="page-hero">

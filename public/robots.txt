@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cetus.wiki/sitemap.xml
+Sitemap: https://www.cetus.wiki/sitemap.xml

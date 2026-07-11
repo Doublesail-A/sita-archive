@@ -8,13 +8,14 @@ const STATIC_PATHS = [
   "/",
   "/news/",
   "/wiki/",
-  "/stories/",
   "/doujin/",
   "/music/",
   "/about/",
   "/entries/",
   "/lore/",
 ];
+
+const TECHNICAL_TAGS = new Set(["img", "important", "new", "wiki", "doujin"]);
 
 function xmlEscape(value: string): string {
   return value
@@ -45,8 +46,9 @@ export const GET: APIRoute = async () => {
   const urls: string[] = [];
 
   for (const path of STATIC_PATHS) urls.push(urlNode(path));
+  if (stories.length > 0) urls.push(urlNode("/stories/"));
 
-  for (const tag of tags) {
+  for (const tag of tags.filter((tag) => !TECHNICAL_TAGS.has(tag.toLowerCase()))) {
     urls.push(urlNode(`/tag/${encodeURIComponent(tag)}/`));
   }
 

@@ -45,7 +45,8 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteRoot).toString
 const socialImage = new URL(image ?? DEFAULT_SOCIAL_IMAGE, siteRoot).toString();
 const allKeywords = mergeKeywords(keywords);
 const extraJsonLd = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
-const structuredData = [buildWebsiteJsonLd(), buildOrganizationJsonLd(), ...extraJsonLd];
+const isHome = Astro.url.pathname === "/";
+const structuredData = [...(isHome ? [buildWebsiteJsonLd(), buildOrganizationJsonLd()] : []), ...extraJsonLd];
 const robotsContent = noindex
   ? "noindex,nofollow"
   : "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
@@ -61,6 +62,7 @@ const robotsContent = noindex
     <meta name="keywords" content={allKeywords.join(", ")} />
     <meta name="theme-color" content={DEFAULT_THEME_COLOR} />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <script is:inline>document.documentElement.classList.add("js");</script>
     <title>{title}</title>
     {description ? <meta name="description" content={description} /> : null}
     <link rel="canonical" href={canonicalUrl} />
@@ -74,8 +76,9 @@ const robotsContent = noindex
     {description ? <meta property="og:description" content={description} /> : null}
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={socialImage} />
+    <meta property="og:image:alt" content="汐塔 Cetus" />
 
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     {description ? <meta name="twitter:description" content={description} /> : null}
     <meta name="twitter:image" content={socialImage} />
@@ -91,5 +94,6 @@ const robotsContent = noindex
   <body class={bodyClass}>
     <div class="site-noise" aria-hidden="true"></div>
     <slot />
+    <script src="/scripts/site.js" defer></script>
   </body>
 </html>

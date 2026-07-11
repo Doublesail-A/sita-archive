@@ -25,7 +25,12 @@ export const GET: APIRoute = async () => {
     return `<item><title>${title}</title><link>${link}</link><guid>${link}</guid><pubDate>${pubDate}</pubDate><description>${description}</description></item>`;
   }).join("");
 
-  const body = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>${xmlEscape(SITE_TITLE)} News</title><link>${SITE_URL}</link><description>${xmlEscape(SITE_DESCRIPTION)}</description>${items}</channel></rss>`;
+  const latestDate = entries[0]
+    ? (toDate(entries[0].data.pubDate) ?? toDate(entries[0].data.date) ?? new Date()).toUTCString()
+    : new Date().toUTCString();
+  const selfUrl = new URL("/rss.xml", SITE_URL).toString();
+
+  const body = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>${xmlEscape(SITE_TITLE)} News</title><link>${SITE_URL}</link><description>${xmlEscape(SITE_DESCRIPTION)}</description><language>zh-CN</language><lastBuildDate>${latestDate}</lastBuildDate><atom:link href="${selfUrl}" rel="self" type="application/rss+xml" />${items}</channel></rss>`;
 
   return new Response(body, {
     headers: {
