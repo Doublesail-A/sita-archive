@@ -117,8 +117,11 @@
 
     const scheduleWheelRelease = () => {
       window.clearTimeout(unlockTimer);
-      const minimumLockRemaining = Math.max(0, 1200 - (performance.now() - wheelLockedAt));
-      unlockTimer = window.setTimeout(releaseWheel, Math.max(680, minimumLockRemaining));
+      // Keep the destination pinned until the whole physical wheel gesture has
+      // gone quiet. High-resolution trackpads and inertial wheels can emit a
+      // second burst well after the smooth scroll itself has finished.
+      const minimumLockRemaining = Math.max(0, 1900 - (performance.now() - wheelLockedAt));
+      unlockTimer = window.setTimeout(releaseWheel, Math.max(1500, minimumLockRemaining));
     };
 
     const guardLockedPanel = () => {
