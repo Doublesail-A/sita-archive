@@ -117,11 +117,8 @@
 
     const scheduleWheelRelease = () => {
       window.clearTimeout(unlockTimer);
-      // Keep the destination pinned until the whole physical wheel gesture has
-      // gone quiet. High-resolution trackpads and inertial wheels can emit a
-      // second burst well after the smooth scroll itself has finished.
-      const minimumLockRemaining = Math.max(0, 1900 - (performance.now() - wheelLockedAt));
-      unlockTimer = window.setTimeout(releaseWheel, Math.max(1500, minimumLockRemaining));
+      const minimumLockRemaining = Math.max(0, 1000 - (performance.now() - wheelLockedAt));
+      unlockTimer = window.setTimeout(releaseWheel, Math.max(800, minimumLockRemaining));
     };
 
     const guardLockedPanel = () => {
@@ -175,14 +172,20 @@
       if (isOversized && direction < 0 && rect.top < -32) return;
 
       event.preventDefault();
+      const now = performance.now();
+      const quietGap = now - lastWheelAt;
+      lastWheelAt = now;
       if (wheelLocked) {
-        scheduleWheelRelease();
-        return;
+        const destinationSettled = lockedPanel && Math.abs(lockedPanel.getBoundingClientRect().top) < 3;
+        const isNewGesture = quietGap > 520 && now - wheelLockedAt > 650 && destinationSettled;
+        if (!isNewGesture) {
+          scheduleWheelRelease();
+          return;
+        }
+        releaseWheel();
       }
 
-      const now = performance.now();
-      if (now - lastWheelAt > 180 || Math.sign(wheelIntent) !== direction) wheelIntent = 0;
-      lastWheelAt = now;
+      if (quietGap > 180 || Math.sign(wheelIntent) !== direction) wheelIntent = 0;
       const deltaFactor = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
       wheelIntent += event.deltaY * deltaFactor;
       if (Math.abs(wheelIntent) < 18) return;

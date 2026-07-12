@@ -142,9 +142,8 @@ html.js .home-page [data-snap-section].is-panel-active [data-panel-layer] { opac
 .home-hero__wash { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(250, 248, 240, .96) 0%, rgba(250, 248, 240, .82) 28%, rgba(250, 248, 240, .28) 58%, transparent 76%), linear-gradient(0deg, rgba(250,248,240,.34), transparent 42%); }
 .home-hero__content { position: absolute; z-index: 2; left: max(28px, calc((100vw - var(--max)) / 2)); bottom: clamp(100px, 13vh, 148px); width: min(760px, calc(100% - 56px)); padding: 0; }
 .home-hero__kicker { width: max-content; margin: 0 0 20px; padding-bottom: 7px; border-bottom: 1px solid currentColor; font-size: .62rem; font-weight: 800; letter-spacing: .22em; animation: hero-copy 1s var(--ease) .35s both; }
-.home-hero__logo { width: auto; margin: 0 0 24px; line-height: 1; animation: hero-copy 1s var(--ease) .45s both; }
-.home-hero__word { display: block; font-family: var(--display); font-size: clamp(6rem, 11vw, 11.5rem); font-weight: 700; letter-spacing: -.085em; line-height: .68; }
-.home-hero__logo-mark { display: block; width: clamp(112px, 12vw, 174px); margin: 28px 0 0 5px; opacity: .72; }
+.home-hero__logo { width: max-content; margin: 0 0 28px; line-height: 1; animation: hero-copy 1s var(--ease) .45s both; }
+.home-hero__logo-mark { display: block; width: clamp(230px, 24vw, 350px); opacity: .86; }
 .home-hero__logo svg { width: 100%; height: auto; filter: brightness(0) saturate(100%); }
 .home-hero__lead { max-width: 520px; margin: 0 0 28px; font-family: var(--serif); font-size: clamp(.98rem, 1.45vw, 1.22rem); font-weight: 600; letter-spacing: .1em; animation: hero-copy 1s var(--ease) .55s both; }
 .home-hero__actions { display: grid; grid-template-columns: repeat(2, minmax(0, 138px)); align-items: center; gap: 10px; animation: hero-copy 1s var(--ease) .65s both; }
@@ -155,7 +154,6 @@ html.js .home-page [data-snap-section].is-panel-active [data-panel-layer] { opac
 .button:focus-visible { outline: 3px solid rgba(64, 94, 219, .35); outline-offset: 3px; }
 .button--light { color: var(--white); background-color: var(--ink); background-image: linear-gradient(var(--coral), var(--coral)); }
 .button--glass { color: var(--ink); background-color: rgba(255, 254, 248, .62); background-image: linear-gradient(var(--ink), var(--ink)); }
-.home-hero__caption { position: absolute; z-index: 2; right: max(28px, calc((100vw - var(--max)) / 2)); bottom: 52px; display: flex; gap: 24px; color: rgba(255, 254, 248, .82); font-size: .58rem; font-weight: 700; letter-spacing: .18em; }
 .scroll-cue { position: absolute; z-index: 2; left: max(28px, calc((100vw - var(--max)) / 2)); bottom: 34px; display: flex; align-items: center; gap: 12px; color: rgba(255, 254, 248, .9); font-size: .55rem; font-weight: 700; letter-spacing: .2em; }
 .scroll-cue span { width: 38px; height: 2px; background: var(--coral); animation: cue-line 1.7s var(--ease) infinite; transform-origin: left; }
 @keyframes cue-line { 0%,100% { transform: scaleX(.25); } 55% { transform: scaleX(1); } }
@@ -420,13 +418,11 @@ html.js .home-page [data-snap-section].is-panel-active [data-panel-layer] { opac
   .home-hero__wash { background: linear-gradient(0deg, rgba(244, 239, 226, .7) 0%, rgba(244, 239, 226, .05) 58%, transparent 78%); }
   .home-hero__content { left: 15px; bottom: 76px; width: calc(100% - 30px); padding: 0; background: transparent; }
   .home-hero__kicker { margin-bottom: 15px; font-size: .56rem; }
-  .home-hero__logo { width: auto; margin-bottom: 18px; }
-  .home-hero__word { font-size: clamp(4.7rem, 20vw, 7rem); }
-  .home-hero__logo-mark { width: clamp(104px, 29vw, 124px); margin-top: 21px; }
+  .home-hero__logo { width: max-content; margin-bottom: 22px; }
+  .home-hero__logo-mark { width: clamp(170px, 50vw, 205px); }
   .home-hero__lead { max-width: 310px; margin-bottom: 20px; font-size: .84rem; line-height: 1.75; }
   .home-hero__actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .button { min-height: 44px; padding: 0 16px; }
-  .home-hero__caption { top: 94px; right: 16px; bottom: auto; display: grid; gap: 5px; color: rgba(41,43,45,.72); text-align: right; }
   .scroll-cue { left: 18px; bottom: 24px; color: rgba(41,43,45,.76); }
   .section-title { grid-template-columns: 1fr auto; gap: 14px; margin-bottom: 36px; }
   .section-title > .micro-label { grid-column: 1 / -1; padding: 0; }
