@@ -1,16 +1,17 @@
 ---
 layout: ../../layouts/ArticlePageLayout.astro
-title: About
+title: ABOUT
 description: 汐塔站点说明与联系信息。
 backHref: /
-backLabel: 返回首页
+backLabel: HOME
 leftLink:
   href: /
-  label: home
+  label: HOME
 ---
 
-它是云海上沉默的灵魂道标，指引着我们生命永恒的航向
-———汐塔
+> 它是云海上沉默的灵魂道标，指引着我们生命永恒的航向
+>
+> ——汐塔
 
 ---
 
@@ -22,23 +23,20 @@ leftLink:
 
 ---
 
-官方QQ群：603618304
+## 联系方式
 
-[同人创作交流群（非官方）](https://qun.qq.com/universal-share/share?ac=1&authKey=EdWXrbJQ1%2Bo8iR2W5GBjyL8TCBrvPto7FikSxr1%2BEP1b9NHru77ikM1bVkfKXWzN&busi_data=eyJncm91cENvZGUiOiIxMDY3NDUwNDU4IiwidG9rZW4iOiJKbnIwTCszSGFzZEZLb1RBZ1NKQkRvU0VpamNsSnVnVEFIWkhmbTU1TEVSQ3pvMFI2Sk53eHdBaVdSek5PN0NsIiwidWluIjoiMzYyOTM2MDg5MSJ9&data=u70H9vKE41QDNrS_-q2hBfvfcjR80mHjeiJ2lR3tCcCY1d_5G8cefpnOOm1fkjB58Ix8pNyqgIZ8V6gJE-5MIQ&svctype=4&tempid=h5_group_info)
+- 站长：[xwd2020@outlook.com](mailto:xwd2020@outlook.com)
+- 官方 QQ 群：603618304
+- [同人创作交流群（非官方）](https://qun.qq.com/universal-share/share?ac=1&authKey=EdWXrbJQ1%2Bo8iR2W5GBjyL8TCBrvPto7FikSxr1%2BEP1b9NHru77ikM1bVkfKXWzN&busi_data=eyJncm91cENvZGUiOiIxMDY3NDUwNDU4IiwidG9rZW4iOiJKbnIwTCszSGFzZEZLb1RBZ1NKQkRvU0VpamNsSnVnVEFIWkhmbTU1TEVSQ3pvMFI2Sk53eHdBaVdSek5PN0NsIiwidWluIjoiMzYyOTM2MDg5MSJ9&data=u70H9vKE41QDNrS_-q2hBfvfcjR80mHjeiJ2lR3tCcCY1d_5G8cefpnOOm1fkjB58Ix8pNyqgIZ8V6gJE-5MIQ&svctype=4&tempid=h5_group_info)
 
-官方社媒
+## 官方社媒
 
-[B站](https://b23.tv/e9bbYDj)
-
-[微博](https://m.weibo.cn/u/7830139417)
-
-[Twitter](https://x.com/Cetus_42)
-
-[YouTube](https://m.youtube.com/@Cetus-42)
-
-[Instagram](https://instagram.com/cetus__42)
-
-[Tiktok](https://tiktok.com/@cetus_42)
+- [B站](https://space.bilibili.com/3493270525053175)
+- [微博](https://m.weibo.cn/u/7830139417)
+- [Twitter](https://x.com/Cetus_42)
+- [YouTube](https://www.youtube.com/@Cetus-42)
+- [Instagram](https://www.instagram.com/cetus__42)
+- [Tiktok](https://www.tiktok.com/@cetus_42)
 
 ---
 

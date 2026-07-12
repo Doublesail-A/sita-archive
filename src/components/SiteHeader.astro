@@ -25,9 +25,9 @@ const { overlay = false } = Astro.props as Props;
       <a class="official-link" href="https://space.bilibili.com/3493270525053175/dynamic" target="_blank" rel="noreferrer">
         OFFICIAL <span aria-hidden="true">↗</span>
       </a>
-      <details class="mobile-menu">
-        <summary aria-label="打开导航菜单"><span></span><span></span></summary>
-        <nav aria-label="移动端导航">
+      <details class="mobile-menu" data-mobile-menu>
+        <summary aria-label="打开导航菜单" aria-controls="site-mobile-nav" aria-expanded="false"><span></span><span></span></summary>
+        <nav id="site-mobile-nav" aria-label="移动端导航">
           {DEFAULT_PAGE_LINKS.map((link) => (
             <a href={link.href}>{link.label}</a>
           ))}
@@ -39,9 +39,52 @@ const { overlay = false } = Astro.props as Props;
 </header>
 
 <script>
-  const menu = document.querySelector<HTMLDetailsElement>(".mobile-menu");
+  const menu = document.querySelector<HTMLDetailsElement>("[data-mobile-menu]");
+  const trigger = menu?.querySelector<HTMLElement>("summary");
+  let closeTimer = 0;
+  let openFrame = 0;
+
+  const closeMenu = () => {
+    if (!menu?.open || menu.classList.contains("is-closing")) return;
+    window.clearTimeout(closeTimer);
+    window.cancelAnimationFrame(openFrame);
+    menu.classList.add("is-closing");
+    menu.classList.remove("is-expanded");
+    trigger?.setAttribute("aria-expanded", "false");
+    closeTimer = window.setTimeout(() => {
+      menu.removeAttribute("open");
+      menu.classList.remove("is-closing");
+    }, 720);
+  };
+
+  trigger?.addEventListener("click", (event) => {
+    if (!menu?.open) return;
+    event.preventDefault();
+    closeMenu();
+  });
+
+  menu?.addEventListener("toggle", () => {
+    if (!menu.open) {
+      menu.classList.remove("is-expanded");
+      trigger?.setAttribute("aria-expanded", "false");
+      return;
+    }
+    menu.classList.remove("is-closing");
+    trigger?.setAttribute("aria-expanded", "true");
+    window.cancelAnimationFrame(openFrame);
+    openFrame = window.requestAnimationFrame(() => {
+      openFrame = window.requestAnimationFrame(() => menu.classList.add("is-expanded"));
+    });
+  });
+
   document.addEventListener("click", (event) => {
     if (!menu?.open || menu.contains(event.target as Node)) return;
-    menu.removeAttribute("open");
+    closeMenu();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || !menu?.open) return;
+    closeMenu();
+    trigger?.focus();
   });
 </script>
