@@ -44,7 +44,7 @@ const jsonLd = [
 ];
 ---
 
-<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} keywords={SITE_KEYWORDS} jsonLd={jsonLd} bodyClass="home-page">
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION} keywords={SITE_KEYWORDS} jsonLd={jsonLd} bodyClass="home-page" htmlClass="home-snap">
   <div class="page-loader" data-page-loader aria-hidden="true">
     <span>CETUS</span>
     <i></i>
@@ -53,14 +53,16 @@ const jsonLd = [
   <SiteHeader overlay />
 
   <main id="main-content">
-    <section class="home-hero" id="top" data-hero>
+    <section class="home-hero is-panel-active" id="top" data-hero data-snap-section>
       <picture class="home-hero__media" data-hero-media>
         <source media="(max-width: 760px)" srcset={toAssetSrc(heroMobile)} />
         <img src={toAssetSrc(heroDesktop)} alt="云海之上的汐塔世界" fetchpriority="high" />
       </picture>
       <div class="home-hero__wash" aria-hidden="true"></div>
-      <div class="home-hero__content">
+      <div class="home-hero__content" data-panel-layer>
+        <p class="home-hero__kicker">CETUS WIKI / 42</p>
         <h1 class="home-hero__logo">
+          <span class="home-hero__word" aria-hidden="true">CETUS</span>
           <span class="home-hero__logo-mark" set:html={logoInline} aria-hidden="true"></span>
           <span class="sr-only">汐塔 Cetus wiki</span>
         </h1>
@@ -77,13 +79,13 @@ const jsonLd = [
       <a class="scroll-cue" href="#news" aria-label="向下浏览"><span></span>SCROLL</a>
     </section>
 
-    <section class="news-section section-pad" id="news" aria-labelledby="news-title">
+    <section class="news-section section-pad" id="news" aria-labelledby="news-title" data-snap-section>
       <header class="section-title" data-reveal>
         <p class="micro-label">LATEST DISPATCH</p>
         <h2 id="news-title">NEWS</h2>
         <a href="/news/">ALL NEWS ↗</a>
       </header>
-      <div class="news-grid">
+      <div class="news-grid" data-panel-layer>
         {latestNews.map((item, index) => (
           <a class:list={["signal-card", `signal-card--tone-${(index % 4) + 1}`]} href={item.url} data-reveal style={`--delay:${index * 70}ms`}>
             <div class="signal-card__media">
@@ -100,7 +102,7 @@ const jsonLd = [
       </div>
     </section>
 
-    <section class="film-section" id="movies" aria-labelledby="film-title">
+    <section class="film-section" id="movies" aria-labelledby="film-title" data-snap-section>
       <div class="film-section__flare" aria-hidden="true"></div>
       <div class="film-section__inner section-pad">
         <header class="section-title section-title--light" data-reveal>
@@ -108,7 +110,7 @@ const jsonLd = [
           <h2 id="film-title">MOVIES</h2>
           <a href="https://space.bilibili.com/3493270525053175/upload" target="_blank" rel="noreferrer">BILIBILI ↗</a>
         </header>
-        <div class="film-grid">
+        <div class="film-grid" data-panel-layer>
           {featuredMovies.map((movie, index) => (
             <button
               class:list={["film-card", index === 0 && "film-card--main"]}
@@ -136,7 +138,7 @@ const jsonLd = [
       </div>
     </section>
 
-    <section class="world-section" id="wiki" aria-labelledby="world-title">
+    <section class="world-section" id="wiki" aria-labelledby="world-title" data-snap-section>
       <div class="world-section__marquee" aria-hidden="true"><span>FIELD GUIDE · FIELD GUIDE · FIELD GUIDE ·</span></div>
       <div class="world-section__inner section-pad">
         <header class="section-title" data-reveal>
@@ -144,7 +146,7 @@ const jsonLd = [
           <h2 id="world-title">WIKI</h2>
           <a href="/wiki/">ALL ENTRIES ↗</a>
         </header>
-        <div class="world-feature">
+        <div class="world-feature" data-panel-layer>
           <div class="world-feature__image" data-reveal>
             <img src={toAssetSrc(worldArchiveImage)} alt="云海世界" loading="lazy" />
             <span aria-hidden="true">CETUS</span>
@@ -166,14 +168,14 @@ const jsonLd = [
       </div>
     </section>
 
-    <section class="doujin-section" id="doujin" aria-labelledby="doujin-title">
+    <section class="doujin-section" id="doujin" aria-labelledby="doujin-title" data-snap-section>
       <div class="doujin-section__inner section-pad">
         <header class="section-title" data-reveal>
           <p class="micro-label">FAN CREATIONS</p>
           <h2 id="doujin-title">DOUJIN</h2>
           <a href="/doujin/">ALL WORKS ↗</a>
         </header>
-        <div class="doujin-grid">
+        <div class="doujin-grid" data-panel-layer>
           {latestDoujin.map((item, index) => (
             <a href={item.url} data-reveal style={`--delay:${index * 70}ms`}>
               <span>{String(index + 1).padStart(2, "0")}</span>
@@ -185,14 +187,17 @@ const jsonLd = [
       </div>
     </section>
 
-    <nav class="route-grid" aria-label="网站模块">
-      <a href="/news/" data-reveal><span>01</span><strong>NEWS</strong><b>↗</b></a>
-      <a href="/wiki/" data-reveal><span>02</span><strong>WIKI</strong><b>↗</b></a>
-      <a href="/doujin/" data-reveal><span>03</span><strong>DOUJIN</strong><b>↗</b></a>
-      <a href="/stories/" data-reveal><span>04</span><strong>STORIES</strong><b>↗</b></a>
-      <a href="/music/" data-reveal><span>05</span><strong>MUSIC</strong><b>↗</b></a>
-      <a href="/about/" data-reveal><span>06</span><strong>ABOUT</strong><b>↗</b></a>
-    </nav>
+    <section class="route-section" id="routes" data-snap-section aria-labelledby="routes-title">
+      <h2 class="sr-only" id="routes-title">网站模块</h2>
+      <nav class="route-grid" aria-label="网站模块" data-panel-layer>
+        <a href="/news/" data-reveal><span>01</span><strong>NEWS</strong><b>↗</b></a>
+        <a href="/wiki/" data-reveal><span>02</span><strong>WIKI</strong><b>↗</b></a>
+        <a href="/doujin/" data-reveal><span>03</span><strong>DOUJIN</strong><b>↗</b></a>
+        <a href="/stories/" data-reveal><span>04</span><strong>STORIES</strong><b>↗</b></a>
+        <a href="/music/" data-reveal><span>05</span><strong>MUSIC</strong><b>↗</b></a>
+        <a href="/about/" data-reveal><span>06</span><strong>ABOUT</strong><b>↗</b></a>
+      </nav>
+    </section>
   </main>
 
   <dialog class="video-modal" data-video-dialog aria-labelledby="video-modal-title">
@@ -215,5 +220,7 @@ const jsonLd = [
     </div>
   </dialog>
 
-  <HomeFooter />
+  <div class="footer-snap" data-snap-section>
+    <HomeFooter />
+  </div>
 </BaseLayout>

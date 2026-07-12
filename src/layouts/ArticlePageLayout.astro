@@ -22,6 +22,8 @@ interface Props {
   schemaType?: string;
 }
 
+const layoutProps = (Astro.props.frontmatter ?? Astro.props) as Props;
+
 const {
   title,
   description,
@@ -29,7 +31,7 @@ const {
   metaValue,
   backHref,
   backLabel,
-  leftLink = { href: "/", label: "home" },
+  leftLink = { href: "/", label: "HOME" },
   rightLinks = DEFAULT_PAGE_LINKS,
   publishedTime,
   modifiedTime,
@@ -37,7 +39,7 @@ const {
   cover,
   showCover = true,
   schemaType = "Article",
-} = Astro.props as Props;
+} = layoutProps;
 
 const pathname = Astro.url.pathname;
 const routeRoot = pathname.split("/").filter(Boolean)[0] ?? "about";

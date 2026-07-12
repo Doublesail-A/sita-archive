@@ -16,6 +16,7 @@ interface Props {
   title?: string;
   description?: string;
   bodyClass?: string;
+  htmlClass?: string;
   keywords?: string[];
   image?: string;
   canonical?: string;
@@ -30,6 +31,7 @@ const {
   title = SITE_TITLE,
   description = SITE_DESCRIPTION,
   bodyClass = "",
+  htmlClass = "",
   keywords = [],
   image,
   canonical,
@@ -53,7 +55,7 @@ const robotsContent = noindex
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" class={htmlClass}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />

@@ -12,7 +12,7 @@ export const SITE_DESCRIPTION = "自天空坠落云海，随潮汐回归彼岸";
 export const SITE_SECTION_DESCRIPTION = "汐塔世界观、影像与同人创作资料。";
 export const SITE_AUTHOR_NAME = "汐塔同人整理站";
 export const OWNER_EMAIL = "xwd2020@outlook.com";
-export const DEFAULT_THEME_COLOR = "#c56f62";
+export const DEFAULT_THEME_COLOR = "#edf4f5";
 export const DEFAULT_SOCIAL_IMAGE = "/images/movies/yunhaizhujing.jpg";
 
 export const SITE_KEYWORDS = [
