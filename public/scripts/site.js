@@ -120,6 +120,51 @@
 
   }
 
+  document.querySelectorAll("[data-film-carousel]").forEach((carousel) => {
+    const cards = Array.from(carousel.querySelectorAll("[data-film-card]"));
+    const previous = carousel.querySelector("[data-film-prev]");
+    const next = carousel.querySelector("[data-film-next]");
+    const status = carousel.querySelector("[data-film-status]");
+    if (cards.length < 2) return;
+
+    let activeIndex = 0;
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    const renderFilmTrack = () => {
+      cards.forEach((card, index) => {
+        const distance = (index - activeIndex + cards.length) % cards.length;
+        const state = distance === 0 ? "main" : distance === 1 ? "next" : distance === cards.length - 1 ? "before" : "after";
+        card.setAttribute("data-film-state", state);
+        card.setAttribute("aria-hidden", state === "main" || state === "next" ? "false" : "true");
+        card.tabIndex = state === "main" || state === "next" ? 0 : -1;
+      });
+      if (status) status.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(cards.length).padStart(2, "0")}`;
+    };
+
+    const moveFilmTrack = (direction) => {
+      activeIndex = (activeIndex + direction + cards.length) % cards.length;
+      renderFilmTrack();
+    };
+
+    previous?.addEventListener("click", () => moveFilmTrack(-1));
+    next?.addEventListener("click", () => moveFilmTrack(1));
+    carousel.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "mouse") return;
+      touchStartX = event.clientX;
+      touchStartY = event.clientY;
+    }, { passive: true });
+    carousel.addEventListener("pointerup", (event) => {
+      if (event.pointerType === "mouse") return;
+      const deltaX = event.clientX - touchStartX;
+      const deltaY = event.clientY - touchStartY;
+      if (Math.abs(deltaX) < 44 || Math.abs(deltaX) < Math.abs(deltaY)) return;
+      moveFilmTrack(deltaX < 0 ? 1 : -1);
+    }, { passive: true });
+
+    renderFilmTrack();
+  });
+
   const dialog = document.querySelector("[data-video-dialog]");
   const frame = dialog?.querySelector("[data-video-frame]");
   const title = dialog?.querySelector("#video-modal-title");

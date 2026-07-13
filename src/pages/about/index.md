@@ -3,10 +3,6 @@ layout: ../../layouts/ArticlePageLayout.astro
 title: ABOUT
 description: 汐塔站点说明与联系信息。
 backHref: /
-backLabel: HOME
-leftLink:
-  href: /
-  label: HOME
 ---
 
 > 它是云海上沉默的灵魂道标，指引着我们生命永恒的航向

@@ -3,7 +3,7 @@ import BaseLayout from "./BaseLayout.astro";
 import PageTopbar from "../components/PageTopbar.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import HomeFooter from "../components/HomeFooter.astro";
-import { DEFAULT_PAGE_LINKS, SITE_TITLE, buildBreadcrumbJsonLd, mergeKeywords, type SiteLink } from "../lib/site";
+import { SITE_TITLE, buildBreadcrumbJsonLd, mergeKeywords } from "../lib/site";
 
 interface Props {
   title: string;
@@ -11,9 +11,6 @@ interface Props {
   metaLabel?: string;
   metaValue?: string;
   backHref?: string;
-  backLabel?: string;
-  leftLink?: SiteLink;
-  rightLinks?: SiteLink[];
   publishedTime?: string;
   modifiedTime?: string;
   tags?: string[];
@@ -29,10 +26,7 @@ const {
   description,
   metaLabel,
   metaValue,
-  backHref,
-  backLabel,
-  leftLink = { href: "/", label: "HOME" },
-  rightLinks = DEFAULT_PAGE_LINKS,
+  backHref = "/",
   publishedTime,
   modifiedTime,
   tags = [],
@@ -47,7 +41,7 @@ const theme = routeRoot === "entries" || routeRoot === "lore" ? "wiki" : routeRo
 const pageKeywords = mergeKeywords([title, ...tags]);
 const crumbs = [
   { name: "首页", path: "/" },
-  ...(leftLink.href !== "/" ? [{ name: leftLink.label, path: leftLink.href }] : []),
+  ...(backHref !== "/" ? [{ name: routeRoot.toUpperCase(), path: backHref }] : []),
   { name: title, path: pathname },
 ];
 const articleJsonLd = {
@@ -79,7 +73,7 @@ const jsonLd = [articleJsonLd, buildBreadcrumbJsonLd(crumbs)];
 >
   <SiteHeader />
   <main class:list={["article-page", `theme-${theme}`]} id="main-content">
-    <div class="article-wrap"><PageTopbar leftLink={leftLink} rightLinks={rightLinks} /></div>
+    <div class="article-wrap"><PageTopbar leftLink={{ href: backHref, label: "BACK" }} /></div>
     <article class="article">
       <header class="article-head">
         <div class="article-wrap">
@@ -92,7 +86,7 @@ const jsonLd = [articleJsonLd, buildBreadcrumbJsonLd(crumbs)];
       {cover && showCover ? <img class="article-cover" src={cover} alt="" /> : null}
       <div class="article-wrap">
         <div class="prose"><slot /></div>
-        {backHref && backLabel ? <footer class="article-foot"><a class="pill-ink" href={backHref}>{backLabel}</a></footer> : null}
+        <footer class="article-foot"><a class="pill-ink" href={backHref}>BACK</a></footer>
       </div>
     </article>
   </main>

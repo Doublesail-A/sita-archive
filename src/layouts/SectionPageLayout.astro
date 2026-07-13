@@ -3,16 +3,13 @@ import BaseLayout from "./BaseLayout.astro";
 import PageTopbar from "../components/PageTopbar.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import HomeFooter from "../components/HomeFooter.astro";
-import { DEFAULT_PAGE_LINKS, SITE_TITLE, buildBreadcrumbJsonLd, mergeKeywords, type SiteLink } from "../lib/site";
+import { SITE_TITLE, buildBreadcrumbJsonLd, mergeKeywords } from "../lib/site";
 
 interface Props {
   title: string;
   description?: string;
   heading?: string;
   backHref?: string;
-  backLabel?: string;
-  leftLink?: SiteLink;
-  rightLinks?: SiteLink[];
   keywords?: string[];
   noindex?: boolean;
 }
@@ -22,9 +19,6 @@ const {
   description,
   heading = title,
   backHref = "/",
-  backLabel = "HOME",
-  leftLink = { href: "/", label: "HOME" },
-  rightLinks = DEFAULT_PAGE_LINKS,
   keywords = [],
   noindex = false,
 } = Astro.props as Props;
@@ -61,10 +55,9 @@ const jsonLd = [
       </div>
     </header>
     <section class="page-content">
-      <PageTopbar leftLink={leftLink} rightLinks={rightLinks} />
+      <PageTopbar leftLink={{ href: backHref, label: "BACK" }} />
       <div class="section-head">
         <h2 class="h2">档案列表</h2>
-        <a class="more" href={backHref}>{backLabel}</a>
       </div>
       <slot />
     </section>
