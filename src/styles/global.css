@@ -198,7 +198,7 @@ html.js .home-page [data-snap-section].is-panel-active [data-panel-layer] { opac
 /* News */
 .news-section { position: relative; isolation: isolate; padding-block: clamp(110px, 13vw, 180px); }
 .news-section::before { content: ""; position: absolute; z-index: -2; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); background: radial-gradient(circle at 8% 12%, rgba(255,255,255,.9), transparent 34%), radial-gradient(circle at 88% 84%, rgba(211,237,242,.94), transparent 38%), var(--news-soft); }
-.news-section::after { content: ""; position: absolute; z-index: -1; inset: 0; pointer-events: none; opacity: .26; background-image: linear-gradient(rgba(67,141,157,.2) 1px, transparent 1px), linear-gradient(90deg, rgba(67,141,157,.2) 1px, transparent 1px); background-size: 28px 28px; mask-image: linear-gradient(90deg, #000, transparent 68%); }
+.news-section::after { content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); pointer-events: none; opacity: .32; background-image: linear-gradient(rgba(67,141,157,.2) 1px, transparent 1px), linear-gradient(90deg, rgba(67,141,157,.2) 1px, transparent 1px); background-size: 28px 28px; }
 .news-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 22px; }
 .signal-card { grid-column: span 6; min-height: 460px; display: grid; grid-template-columns: 1.04fr .96fr; overflow: hidden; border: 1px solid rgba(76,105,112,.13); border-radius: 0; color: var(--ink); transition: transform .45s var(--ease), border-color .35s, box-shadow .45s var(--ease); }
 .signal-card:nth-child(1) { grid-column: span 7; }
@@ -213,10 +213,10 @@ html.js .home-page [data-snap-section].is-panel-active [data-panel-layer] { opac
 .signal-card h3 { margin: auto 0 18px; font-family: var(--serif); font-size: clamp(1.4rem, 2.2vw, 2.2rem); line-height: 1.35; }
 .signal-card p { margin: 0 0 26px; font-size: .78rem; }
 .signal-card__arrow { font-size: .63rem; font-weight: 800; letter-spacing: .15em; }
-.signal-card--tone-1 { background: #f1f6f6; }
-.signal-card--tone-2 { background: #faf8f2; }
-.signal-card--tone-3 { background: #edf4f5; }
-.signal-card--tone-4 { background: #f5f2f6; }
+.signal-card--tone-1 { background: rgba(241,246,246,.9); }
+.signal-card--tone-2 { background: rgba(250,248,242,.9); }
+.signal-card--tone-3 { background: rgba(237,244,245,.9); }
+.signal-card--tone-4 { background: rgba(245,242,246,.9); }
 
 /* Movies */
 .film-section { position: relative; overflow: hidden; color: var(--white); background: var(--cobalt); }
