@@ -101,7 +101,7 @@ const jsonLd = [
           <h2 id="film-title">MOVIES</h2>
           <a href="https://space.bilibili.com/3493270525053175/upload" target="_blank" rel="noreferrer">BILIBILI ↗</a>
         </header>
-        <div class="film-carousel" data-film-carousel data-panel-layer>
+        <div class="film-carousel" data-film-carousel data-panel-layer tabindex="0" aria-label="视频画廊；滚动或使用左右方向键切换">
           <div class="film-grid">
           {featuredMovies.map((movie, index) => (
             <button
@@ -127,10 +127,9 @@ const jsonLd = [
             </button>
           ))}
           </div>
-          <div class="film-carousel__nav" aria-label="视频切换">
-            <button type="button" data-film-prev aria-label="上一个视频">←</button>
+          <div class="film-carousel__nav" aria-live="polite">
+            <span class="film-carousel__hint">SCROLL</span>
             <span data-film-status>01 / {String(featuredMovies.length).padStart(2, "0")}</span>
-            <button type="button" data-film-next aria-label="下一个视频">→</button>
           </div>
         </div>
       </div>

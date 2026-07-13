@@ -125,16 +125,81 @@
     const previous = carousel.querySelector("[data-film-prev]");
     const next = carousel.querySelector("[data-film-next]");
     const status = carousel.querySelector("[data-film-status]");
+    const filmSection = carousel.closest(".film-section");
+    const filmGrid = carousel.querySelector(".film-grid");
+    const touchSurface = filmSection || carousel;
     if (cards.length < 2) return;
 
     let activeIndex = 0;
+    let mobilePage = 0;
+    let mobilePageCount = 1;
+    let mobileVisibleCount = 1;
     let touchStartX = 0;
     let touchStartY = 0;
+    let touchDirection = 0;
+    let touchConsumed = false;
+    let wheelDelta = 0;
+    let wheelConsumed = false;
+    let wheelLockedUntil = 0;
+    let wheelIdleTimer = 0;
+
+    const isMobileFilms = () => window.matchMedia("(max-width: 760px), (pointer: coarse)").matches;
+
+    const isFilmPanelAligned = () => {
+      if (!(filmSection instanceof HTMLElement)) return false;
+      const rect = filmSection.getBoundingClientRect();
+      const tolerance = Math.max(18, window.innerHeight * 0.09);
+      return Math.abs(rect.top) <= tolerance && Math.abs(rect.bottom - window.innerHeight) <= tolerance;
+    };
+
+    const getFilmDirectionBounds = () => {
+      if (isMobileFilms()) {
+        return { canMoveBack: mobilePage > 0, canMoveForward: mobilePage < mobilePageCount - 1 };
+      }
+      return { canMoveBack: activeIndex > 0, canMoveForward: activeIndex < cards.length - 1 };
+    };
 
     const renderFilmTrack = () => {
+      if (isMobileFilms() && filmGrid instanceof HTMLElement) {
+        const gap = 11;
+        const availableHeight = Math.max(120, filmGrid.clientHeight);
+        const preferredHeight = window.innerHeight <= 700 ? 126 : 142;
+        mobileVisibleCount = Math.max(1, Math.min(3, cards.length, Math.floor((availableHeight + gap) / (preferredHeight + gap))));
+        mobilePageCount = Math.ceil(cards.length / mobileVisibleCount);
+        mobilePage = Math.min(mobilePage, mobilePageCount - 1);
+        const cardHeight = Math.min(188, Math.floor((availableHeight - gap * (mobileVisibleCount - 1)) / mobileVisibleCount));
+        const firstVisible = mobilePage * mobileVisibleCount;
+        const lastVisible = Math.min(cards.length, firstVisible + mobileVisibleCount);
+
+        cards.forEach((card, index) => {
+          const column = Math.floor(index / mobileVisibleCount);
+          const row = index % mobileVisibleCount;
+          const mobileState = column === mobilePage ? "visible" : column < mobilePage ? "before" : "after";
+          card.setAttribute("data-film-mobile-state", mobileState);
+          card.style.setProperty("--film-mobile-x", `${(column - mobilePage) * 106}%`);
+          card.style.setProperty("--film-mobile-y", `${row * (cardHeight + gap)}px`);
+          card.style.setProperty("--film-mobile-h", `${cardHeight}px`);
+          card.setAttribute("aria-hidden", mobileState === "visible" ? "false" : "true");
+          card.tabIndex = mobileState === "visible" ? 0 : -1;
+        });
+
+        if (status) {
+          const range = lastVisible - firstVisible > 1
+            ? `${String(firstVisible + 1).padStart(2, "0")}–${String(lastVisible).padStart(2, "0")}`
+            : String(firstVisible + 1).padStart(2, "0");
+          status.textContent = `${range} / ${String(cards.length).padStart(2, "0")}`;
+        }
+        return;
+      }
+
+      cards.forEach((card) => {
+        card.removeAttribute("data-film-mobile-state");
+        card.style.removeProperty("--film-mobile-x");
+        card.style.removeProperty("--film-mobile-y");
+        card.style.removeProperty("--film-mobile-h");
+      });
       cards.forEach((card, index) => {
-        const distance = (index - activeIndex + cards.length) % cards.length;
-        const state = distance === 0 ? "main" : distance === 1 ? "next" : distance === cards.length - 1 ? "before" : "after";
+        const state = index === activeIndex ? "main" : index === activeIndex + 1 ? "next" : index < activeIndex ? "before" : "after";
         card.setAttribute("data-film-state", state);
         card.setAttribute("aria-hidden", state === "main" || state === "next" ? "false" : "true");
         card.tabIndex = state === "main" || state === "next" ? 0 : -1;
@@ -143,23 +208,93 @@
     };
 
     const moveFilmTrack = (direction) => {
-      activeIndex = (activeIndex + direction + cards.length) % cards.length;
+      if (isMobileFilms()) {
+        mobilePage = Math.max(0, Math.min(mobilePageCount - 1, mobilePage + direction));
+      } else {
+        activeIndex = Math.max(0, Math.min(cards.length - 1, activeIndex + direction));
+      }
       renderFilmTrack();
     };
 
     previous?.addEventListener("click", () => moveFilmTrack(-1));
     next?.addEventListener("click", () => moveFilmTrack(1));
-    carousel.addEventListener("pointerdown", (event) => {
-      if (event.pointerType === "mouse") return;
-      touchStartX = event.clientX;
-      touchStartY = event.clientY;
+
+    carousel.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      const direction = event.key === "ArrowRight" ? 1 : -1;
+      const bounds = getFilmDirectionBounds();
+      if ((direction > 0 && !bounds.canMoveForward) || (direction < 0 && !bounds.canMoveBack)) return;
+      event.preventDefault();
+      moveFilmTrack(direction);
+    });
+
+    window.addEventListener("wheel", (event) => {
+      if (!isFilmPanelAligned() || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      const direction = event.deltaY > 0 ? 1 : -1;
+      const bounds = getFilmDirectionBounds();
+      const canMove = direction > 0 ? bounds.canMoveForward : bounds.canMoveBack;
+
+      window.clearTimeout(wheelIdleTimer);
+      wheelIdleTimer = window.setTimeout(() => {
+        wheelDelta = 0;
+        wheelConsumed = false;
+        wheelLockedUntil = 0;
+      }, 900);
+
+      if (performance.now() < wheelLockedUntil) {
+        event.preventDefault();
+        return;
+      }
+
+      if (!canMove) {
+        if (wheelConsumed) event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      if (wheelConsumed) return;
+      wheelDelta += event.deltaY;
+      if (Math.abs(wheelDelta) < 34) return;
+      wheelConsumed = true;
+      wheelLockedUntil = performance.now() + 1100;
+      wheelDelta = 0;
+      moveFilmTrack(direction);
+    }, { passive: false });
+
+    touchSurface.addEventListener("touchstart", (event) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      touchDirection = 0;
+      touchConsumed = false;
     }, { passive: true });
-    carousel.addEventListener("pointerup", (event) => {
-      if (event.pointerType === "mouse") return;
-      const deltaX = event.clientX - touchStartX;
-      const deltaY = event.clientY - touchStartY;
-      if (Math.abs(deltaX) < 44 || Math.abs(deltaX) < Math.abs(deltaY)) return;
-      moveFilmTrack(deltaX < 0 ? 1 : -1);
+
+    touchSurface.addEventListener("touchmove", (event) => {
+      const touch = event.touches[0];
+      if (!touch || !isFilmPanelAligned()) return;
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+      if (Math.abs(deltaY) < 8 || Math.abs(deltaY) <= Math.abs(deltaX)) return;
+      touchDirection = deltaY < 0 ? 1 : -1;
+      const bounds = getFilmDirectionBounds();
+      const canMove = touchDirection > 0 ? bounds.canMoveForward : bounds.canMoveBack;
+      if (!canMove) return;
+      event.preventDefault();
+      if (touchConsumed || Math.abs(deltaY) < 46) return;
+      touchConsumed = true;
+      moveFilmTrack(touchDirection);
+    }, { passive: false });
+
+    touchSurface.addEventListener("touchend", () => {
+      touchDirection = 0;
+      touchConsumed = false;
+    }, { passive: true });
+
+    let filmResizeFrame = 0;
+    window.addEventListener("resize", () => {
+      window.cancelAnimationFrame(filmResizeFrame);
+      filmResizeFrame = window.requestAnimationFrame(renderFilmTrack);
     }, { passive: true });
 
     renderFilmTrack();
