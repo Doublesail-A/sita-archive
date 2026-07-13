@@ -3,8 +3,31 @@
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isHome = document.body.classList.contains("home-page");
+  let panelWidth = 0;
+  let panelMetricFrame = 0;
+  const syncPanelMetrics = (force = false) => {
+    if (!isHome) return;
+    window.cancelAnimationFrame(panelMetricFrame);
+    panelMetricFrame = window.requestAnimationFrame(() => {
+      const viewport = window.visualViewport;
+      const width = Math.round(viewport?.width || window.innerWidth);
+      const height = Math.round(viewport?.height || window.innerHeight);
+      const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+      if (!force && coarsePointer && panelWidth && Math.abs(width - panelWidth) < 32) return;
+      panelWidth = width;
+      document.documentElement.style.setProperty("--panel-height", `${height}px`);
+      document.documentElement.style.setProperty("--panel-width", `${width}px`);
+    });
+  };
+  syncPanelMetrics(true);
+  window.addEventListener("resize", () => syncPanelMetrics(false), { passive: true });
+  window.addEventListener("orientationchange", () => window.setTimeout(() => syncPanelMetrics(true), 180), { passive: true });
   const loader = document.querySelector("[data-page-loader]");
-  const finishLoading = () => loader?.classList.add("is-done");
+  if (loader) document.documentElement.classList.add("is-loading");
+  const finishLoading = () => {
+    loader?.classList.add("is-done");
+    window.setTimeout(() => document.documentElement.classList.remove("is-loading"), reducedMotion ? 0 : 720);
+  };
 
   if (document.readyState === "complete") {
     window.setTimeout(finishLoading, reducedMotion ? 0 : 340);
@@ -22,9 +45,7 @@
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-visible");
-            if (!isHome) observer.unobserve(entry.target);
-          } else if (isHome) {
-            entry.target.classList.remove("is-visible");
+            observer.unobserve(entry.target);
           }
         });
       },
@@ -97,119 +118,6 @@
       snapSections.forEach((panel) => panelObserver.observe(panel));
     }
 
-    const wheelMode = window.matchMedia("(min-width: 900px) and (min-height: 680px) and (hover: hover) and (pointer: fine)");
-    let wheelIntent = 0;
-    let wheelLocked = false;
-    let wheelLockedAt = 0;
-    let lockedPanel = null;
-    let correctingLockedPanel = false;
-    let lastWheelAt = 0;
-    let unlockTimer = 0;
-
-    const releaseWheel = () => {
-      wheelLocked = false;
-      wheelIntent = 0;
-      lockedPanel = null;
-      correctingLockedPanel = false;
-      document.documentElement.classList.remove("is-section-switching");
-      window.clearTimeout(unlockTimer);
-    };
-
-    const scheduleWheelRelease = () => {
-      window.clearTimeout(unlockTimer);
-      const minimumLockRemaining = Math.max(0, 1000 - (performance.now() - wheelLockedAt));
-      unlockTimer = window.setTimeout(releaseWheel, Math.max(800, minimumLockRemaining));
-    };
-
-    const guardLockedPanel = () => {
-      if (!wheelLocked || !lockedPanel) return;
-      scheduleWheelRelease();
-      if (performance.now() - wheelLockedAt < 720 || correctingLockedPanel) return;
-      const offset = lockedPanel.getBoundingClientRect().top;
-      if (Math.abs(offset) < 3) return;
-      correctingLockedPanel = true;
-      window.scrollTo({ top: window.scrollY + offset, behavior: "auto" });
-      window.requestAnimationFrame(() => {
-        correctingLockedPanel = false;
-      });
-    };
-
-    const hasScrollableAncestor = (target, direction) => {
-      let element = target instanceof Element ? target : null;
-      while (element && element !== document.body) {
-        const style = window.getComputedStyle(element);
-        const canScroll = /(auto|scroll)/.test(style.overflowY) && element.scrollHeight > element.clientHeight + 2;
-        if (canScroll) {
-          if (direction > 0 && element.scrollTop + element.clientHeight < element.scrollHeight - 2) return true;
-          if (direction < 0 && element.scrollTop > 2) return true;
-        }
-        element = element.parentElement;
-      }
-      return false;
-    };
-
-    const onSectionWheel = (event) => {
-      if (!wheelMode.matches || reducedMotion || event.ctrlKey || event.metaKey || event.shiftKey) return;
-      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
-      if (document.querySelector("dialog[open], [data-mobile-menu][open]")) return;
-      if (window.visualViewport && Math.abs(window.visualViewport.scale - 1) > 0.01) return;
-
-      const target = event.target instanceof Element ? event.target : null;
-      if (target?.closest("input, textarea, select, button, [contenteditable='true'], iframe")) return;
-
-      const direction = Math.sign(event.deltaY);
-      if (!direction || hasScrollableAncestor(target, direction)) return;
-
-      const current = snapSections.reduce((best, panel) => {
-        if (!best) return panel;
-        return Math.abs(panel.getBoundingClientRect().top) < Math.abs(best.getBoundingClientRect().top) ? panel : best;
-      }, null);
-      if (!current) return;
-
-      const rect = current.getBoundingClientRect();
-      const isOversized = rect.height > window.innerHeight + 64;
-      if (isOversized && direction > 0 && rect.bottom > window.innerHeight + 32) return;
-      if (isOversized && direction < 0 && rect.top < -32) return;
-
-      event.preventDefault();
-      const now = performance.now();
-      const quietGap = now - lastWheelAt;
-      lastWheelAt = now;
-      if (wheelLocked) {
-        const destinationSettled = lockedPanel && Math.abs(lockedPanel.getBoundingClientRect().top) < 3;
-        const isNewGesture = quietGap > 520 && now - wheelLockedAt > 650 && destinationSettled;
-        if (!isNewGesture) {
-          scheduleWheelRelease();
-          return;
-        }
-        releaseWheel();
-      }
-
-      if (quietGap > 180 || Math.sign(wheelIntent) !== direction) wheelIntent = 0;
-      const deltaFactor = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
-      wheelIntent += event.deltaY * deltaFactor;
-      if (Math.abs(wheelIntent) < 18) return;
-
-      const currentIndex = snapSections.indexOf(current);
-      const nextIndex = Math.max(0, Math.min(snapSections.length - 1, currentIndex + direction));
-      if (nextIndex === currentIndex) {
-        wheelIntent = 0;
-        return;
-      }
-
-      const nextPanel = snapSections[nextIndex];
-      wheelLocked = true;
-      wheelLockedAt = performance.now();
-      lockedPanel = nextPanel;
-      wheelIntent = 0;
-      document.documentElement.classList.add("is-section-switching");
-      setActivePanel(nextPanel);
-      nextPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-      scheduleWheelRelease();
-    };
-
-    window.addEventListener("wheel", onSectionWheel, { passive: false });
-    window.addEventListener("scroll", guardLockedPanel, { passive: true });
   }
 
   const dialog = document.querySelector("[data-video-dialog]");
