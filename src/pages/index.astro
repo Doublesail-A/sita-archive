@@ -19,13 +19,9 @@ const [news, movies, wiki, doujin] = await Promise.all([
 ]);
 
 const latestNews = news.slice(0, 4);
-const featuredMovies = movies.slice(0, 2).map((movie) => ({
+const featuredMovies = movies.slice(0, 4).map((movie) => ({
   ...movie,
-  bvid:
-    ({
-      "xita-yunhaizhujing": "BV1HUq5BqErE",
-      "xita-yunshangyoucha": "BV1894y167kr",
-    } as Record<string, string>)[movie.slug] ?? movie.link.match(/BV[a-zA-Z0-9]+/)?.[0],
+  bvid: movie.link.match(/BV[a-zA-Z0-9]+/)?.[0],
 }));
 const worldEntries = wiki.slice(0, 3);
 const latestDoujin = doujin.slice(0, 4);
@@ -105,17 +101,18 @@ const jsonLd = [
           <h2 id="film-title">MOVIES</h2>
           <a href="https://space.bilibili.com/3493270525053175/upload" target="_blank" rel="noreferrer">BILIBILI ↗</a>
         </header>
-        <div class="film-grid" data-panel-layer>
+        <div class="film-carousel" data-film-carousel data-panel-layer>
+          <div class="film-grid">
           {featuredMovies.map((movie, index) => (
             <button
-              class:list={["film-card", index === 0 && "film-card--main"]}
+              class="film-card"
               type="button"
+              data-film-card
+              data-film-state={index === 0 ? "main" : index === 1 ? "next" : "after"}
               data-video-open
               data-video-id={movie.bvid}
               data-video-title={movie.title}
               aria-label={`播放 ${movie.title}`}
-              data-reveal
-              style={`--delay:${index * 110}ms`}
             >
               <span class="film-card__image">
                 <img src={movie.cover} alt="" loading="lazy" />
@@ -129,6 +126,12 @@ const jsonLd = [
               </span>
             </button>
           ))}
+          </div>
+          <div class="film-carousel__nav" aria-label="视频切换">
+            <button type="button" data-film-prev aria-label="上一个视频">←</button>
+            <span data-film-status>01 / {String(featuredMovies.length).padStart(2, "0")}</span>
+            <button type="button" data-film-next aria-label="下一个视频">→</button>
+          </div>
         </div>
       </div>
     </section>

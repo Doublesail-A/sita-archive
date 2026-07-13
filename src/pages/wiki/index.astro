@@ -5,7 +5,7 @@ import SiteHeader from "../../components/SiteHeader.astro";
 import HomeFooter from "../../components/HomeFooter.astro";
 import { getCollectionCards } from "../../lib/content";
 import { formatDate } from "../../lib/format";
-import { DEFAULT_PAGE_LINKS, SITE_TITLE, buildBreadcrumbJsonLd, mergeKeywords } from "../../lib/site";
+import { SITE_TITLE, buildBreadcrumbJsonLd, mergeKeywords } from "../../lib/site";
 
 const entries = await getCollectionCards("wiki");
 const items = entries.map((entry) => ({
@@ -46,7 +46,7 @@ const jsonLd = [
       </div>
     </header>
     <div class="page-content">
-      <PageTopbar leftLink={{ href: "/", label: "HOME" }} rightLinks={DEFAULT_PAGE_LINKS} />
+      <PageTopbar leftLink={{ href: "/", label: "BACK" }} />
       <section class="page-head">
       <p class="eyebrow">SEARCH {items.length} RECORDS</p>
 
