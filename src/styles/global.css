@@ -245,12 +245,6 @@ html.js .home-page [data-snap-section].is-panel-active [data-panel-layer] { opac
 .film-card__info strong { display: block; margin: 10px 0 8px; font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 3rem); line-height: 1.25; }
 .film-card[data-film-state="next"] .film-card__info strong { font-size: clamp(1.25rem, 2.1vw, 2rem); }
 .film-card__info small { display: block; color: rgba(255,254,248,.72); font-size: .78rem; }
-.film-carousel__nav { position: absolute; z-index: 8; right: 0; bottom: 0; display: flex; align-items: center; gap: 14px; padding: 12px 16px; color: var(--ink); background: rgba(255,254,248,.92); box-shadow: 0 14px 34px rgba(13,18,55,.22); backdrop-filter: blur(12px); }
-.film-carousel__nav button { width: 38px; height: 38px; display: grid; place-items: center; cursor: pointer; background: var(--lemon); font-weight: 800; transition: color .25s, background .25s, transform .3s var(--ease); }
-.film-carousel__nav button:hover { color: var(--white); background: var(--ink); transform: scale(1.05); }
-.film-carousel__nav span { min-width: 62px; text-align: center; font-family: var(--display); font-size: .67rem; letter-spacing: .1em; }
-.film-carousel__nav .film-carousel__hint { min-width: 0; padding-right: 14px; border-right: 1px solid rgba(41,43,45,.24); font-size: .55rem; }
-
 .video-modal { width: min(100% - 40px, 1180px); max-width: none; padding: 0; border: 0; color: var(--white); background: transparent; overflow: visible; }
 .video-modal::backdrop { background: rgba(24,20,30,.8); backdrop-filter: blur(18px) saturate(.6); }
 .video-modal[open] { animation: modal-in .55s var(--ease) both; }
@@ -532,17 +526,15 @@ html.home-snap { scroll-snap-type: y mandatory; scroll-padding-block-start: 0; }
   .signal-card__meta { font-size: .6rem; }
   .film-section__inner { padding-block: clamp(68px, 9svh, 82px) clamp(18px, 3svh, 28px); }
   .film-carousel { --mobile-film-h: clamp(142px, 22svh, 188px); flex: 1; min-height: 0; }
-  .film-grid { height: calc(100% - 48px); min-height: 0; overflow: hidden; }
-  .film-card, .film-card[data-film-state="main"], .film-card[data-film-state="next"], .film-card[data-film-state="before"], .film-card[data-film-state="after"] { top: var(--film-mobile-y, 0); left: var(--film-mobile-x, 0); width: 100%; height: var(--film-mobile-h, var(--mobile-film-h)); display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); align-items: stretch; gap: 14px; margin: 0; opacity: 0; filter: blur(8px); pointer-events: none; transform: scale(.97); transition: left .82s var(--ease), top .82s var(--ease), height .55s var(--ease), opacity .42s ease, filter .55s ease, transform .82s var(--ease); }
+  .film-grid { height: 100%; min-height: 0; overflow: hidden; }
+  .film-card, .film-card[data-film-state="main"], .film-card[data-film-state="next"], .film-card[data-film-state="before"], .film-card[data-film-state="after"] { top: var(--film-mobile-y, 0); left: var(--film-mobile-x, 0); width: 100%; height: var(--film-mobile-h, var(--mobile-film-h)); display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); align-items: stretch; gap: 14px; margin: 0; opacity: 0; filter: blur(10px); pointer-events: none; transform: translateX(5%) scale(.965); will-change: left, opacity, filter, transform; transition: left .9s var(--ease), top .72s var(--ease), height .55s var(--ease), opacity .62s ease, filter .68s ease, transform .9s var(--ease); }
   .film-card[data-film-mobile-state="visible"] { opacity: 1; filter: none; pointer-events: auto; transform: none; }
+  .film-card[data-film-mobile-state="before"] { transform: translateX(-5%) scale(.965); }
   .film-card__image, .film-card[data-film-state="main"] .film-card__image { height: 100%; min-height: 0; border-radius: clamp(28px, 9vw, 42px); }
   .film-card__info { padding: 0; }
   .film-card__info strong { margin: 7px 0 6px; font-size: clamp(1rem, 4.4vw, 1.3rem); }
   .film-card__info small { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 3; font-size: .68rem; line-height: 1.55; }
   .film-card__play { width: 62px; }
-  .film-carousel__nav { bottom: 0; gap: 10px; padding: 8px 10px; }
-  .film-carousel__nav .film-carousel__hint { padding-right: 10px; }
-  .film-carousel__nav button { width: 34px; height: 34px; }
   .video-modal { width: calc(100% - 22px); }
   .video-modal__panel { padding: 10px; border-radius: 20px; }
   .video-modal__frame { border-radius: 13px; }

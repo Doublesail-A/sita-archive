@@ -122,9 +122,6 @@
 
   document.querySelectorAll("[data-film-carousel]").forEach((carousel) => {
     const cards = Array.from(carousel.querySelectorAll("[data-film-card]"));
-    const previous = carousel.querySelector("[data-film-prev]");
-    const next = carousel.querySelector("[data-film-next]");
-    const status = carousel.querySelector("[data-film-status]");
     const filmSection = carousel.closest(".film-section");
     const filmGrid = carousel.querySelector(".film-grid");
     const touchSurface = filmSection || carousel;
@@ -136,20 +133,21 @@
     let mobileVisibleCount = 1;
     let touchStartX = 0;
     let touchStartY = 0;
-    let touchDirection = 0;
     let touchConsumed = false;
     let wheelDelta = 0;
-    let wheelConsumed = false;
-    let wheelLockedUntil = 0;
+    let wheelGestureActive = false;
     let wheelIdleTimer = 0;
+    let departureLockedUntil = 0;
 
     const isMobileFilms = () => window.matchMedia("(max-width: 760px), (pointer: coarse)").matches;
 
     const isFilmPanelAligned = () => {
       if (!(filmSection instanceof HTMLElement)) return false;
       const rect = filmSection.getBoundingClientRect();
-      const tolerance = Math.max(18, window.innerHeight * 0.09);
-      return Math.abs(rect.top) <= tolerance && Math.abs(rect.bottom - window.innerHeight) <= tolerance;
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const visibleHeight = Math.max(0, Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0));
+      const visibleRatio = visibleHeight / Math.max(1, Math.min(rect.height, viewportHeight));
+      return visibleRatio >= 0.82 && Math.abs(rect.top) <= viewportHeight * 0.2;
     };
 
     const getFilmDirectionBounds = () => {
@@ -168,9 +166,6 @@
         mobilePageCount = Math.ceil(cards.length / mobileVisibleCount);
         mobilePage = Math.min(mobilePage, mobilePageCount - 1);
         const cardHeight = Math.min(188, Math.floor((availableHeight - gap * (mobileVisibleCount - 1)) / mobileVisibleCount));
-        const firstVisible = mobilePage * mobileVisibleCount;
-        const lastVisible = Math.min(cards.length, firstVisible + mobileVisibleCount);
-
         cards.forEach((card, index) => {
           const column = Math.floor(index / mobileVisibleCount);
           const row = index % mobileVisibleCount;
@@ -182,13 +177,6 @@
           card.setAttribute("aria-hidden", mobileState === "visible" ? "false" : "true");
           card.tabIndex = mobileState === "visible" ? 0 : -1;
         });
-
-        if (status) {
-          const range = lastVisible - firstVisible > 1
-            ? `${String(firstVisible + 1).padStart(2, "0")}–${String(lastVisible).padStart(2, "0")}`
-            : String(firstVisible + 1).padStart(2, "0");
-          status.textContent = `${range} / ${String(cards.length).padStart(2, "0")}`;
-        }
         return;
       }
 
@@ -204,7 +192,6 @@
         card.setAttribute("aria-hidden", state === "main" || state === "next" ? "false" : "true");
         card.tabIndex = state === "main" || state === "next" ? 0 : -1;
       });
-      if (status) status.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(cards.length).padStart(2, "0")}`;
     };
 
     const moveFilmTrack = (direction) => {
@@ -216,8 +203,15 @@
       renderFilmTrack();
     };
 
-    previous?.addEventListener("click", () => moveFilmTrack(-1));
-    next?.addEventListener("click", () => moveFilmTrack(1));
+    const leaveFilmPanel = (direction) => {
+      if (!(filmSection instanceof HTMLElement)) return;
+      const panels = Array.from(document.querySelectorAll("[data-snap-section]"));
+      const panelIndex = panels.indexOf(filmSection);
+      const target = panels[panelIndex + direction];
+      if (!(target instanceof HTMLElement)) return;
+      departureLockedUntil = performance.now() + 920;
+      target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+    };
 
     carousel.addEventListener("keydown", (event) => {
       if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
@@ -229,36 +223,30 @@
     });
 
     window.addEventListener("wheel", (event) => {
+      if (performance.now() < departureLockedUntil) {
+        event.preventDefault();
+        return;
+      }
       if (!isFilmPanelAligned() || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-      const direction = event.deltaY > 0 ? 1 : -1;
-      const bounds = getFilmDirectionBounds();
-      const canMove = direction > 0 ? bounds.canMoveForward : bounds.canMoveBack;
+      event.preventDefault();
 
       window.clearTimeout(wheelIdleTimer);
       wheelIdleTimer = window.setTimeout(() => {
         wheelDelta = 0;
-        wheelConsumed = false;
-        wheelLockedUntil = 0;
-      }, 900);
+        wheelGestureActive = false;
+      }, 220);
 
-      if (performance.now() < wheelLockedUntil) {
-        event.preventDefault();
-        return;
-      }
-
-      if (!canMove) {
-        if (wheelConsumed) event.preventDefault();
-        return;
-      }
-
-      event.preventDefault();
-      if (wheelConsumed) return;
+      if (wheelGestureActive) return;
       wheelDelta += event.deltaY;
-      if (Math.abs(wheelDelta) < 34) return;
-      wheelConsumed = true;
-      wheelLockedUntil = performance.now() + 1100;
+      if (Math.abs(wheelDelta) < 28) return;
+
+      wheelGestureActive = true;
+      const direction = event.deltaY > 0 ? 1 : -1;
+      const bounds = getFilmDirectionBounds();
+      const canMove = direction > 0 ? bounds.canMoveForward : bounds.canMoveBack;
       wheelDelta = 0;
-      moveFilmTrack(direction);
+      if (canMove) moveFilmTrack(direction);
+      else leaveFilmPanel(direction);
     }, { passive: false });
 
     touchSurface.addEventListener("touchstart", (event) => {
@@ -266,28 +254,31 @@
       if (!touch) return;
       touchStartX = touch.clientX;
       touchStartY = touch.clientY;
-      touchDirection = 0;
       touchConsumed = false;
     }, { passive: true });
 
     touchSurface.addEventListener("touchmove", (event) => {
       const touch = event.touches[0];
-      if (!touch || !isFilmPanelAligned()) return;
+      if (!touch) return;
+      if (performance.now() < departureLockedUntil) {
+        event.preventDefault();
+        return;
+      }
+      if (!isFilmPanelAligned()) return;
       const deltaX = touch.clientX - touchStartX;
       const deltaY = touch.clientY - touchStartY;
       if (Math.abs(deltaY) < 8 || Math.abs(deltaY) <= Math.abs(deltaX)) return;
-      touchDirection = deltaY < 0 ? 1 : -1;
-      const bounds = getFilmDirectionBounds();
-      const canMove = touchDirection > 0 ? bounds.canMoveForward : bounds.canMoveBack;
-      if (!canMove) return;
       event.preventDefault();
       if (touchConsumed || Math.abs(deltaY) < 46) return;
       touchConsumed = true;
-      moveFilmTrack(touchDirection);
+      const direction = deltaY < 0 ? 1 : -1;
+      const bounds = getFilmDirectionBounds();
+      const canMove = direction > 0 ? bounds.canMoveForward : bounds.canMoveBack;
+      if (canMove) moveFilmTrack(direction);
+      else leaveFilmPanel(direction);
     }, { passive: false });
 
     touchSurface.addEventListener("touchend", () => {
-      touchDirection = 0;
       touchConsumed = false;
     }, { passive: true });
 
