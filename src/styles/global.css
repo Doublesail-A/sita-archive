@@ -405,8 +405,8 @@ html.js .home-page [data-snap-section].is-panel-active [data-panel-layer] { opac
 
 /* Viewport-driven home panels: native snapping, no wheel interception. */
 html.home-snap { scroll-snap-type: y mandatory; scroll-padding-block-start: 0; }
-.home-page [data-snap-section] { block-size: var(--panel-height, 100svh); min-block-size: var(--panel-height, 100svh); max-block-size: var(--panel-height, 100svh); overflow: hidden; scroll-snap-align: start; scroll-snap-stop: always; }
-.home-page .footer { scroll-snap-align: start; }
+.home-page [data-snap-section]:not(.footer-snap) { block-size: var(--panel-height, 100svh); min-block-size: var(--panel-height, 100svh); max-block-size: var(--panel-height, 100svh); overflow: hidden; scroll-snap-align: start; scroll-snap-stop: always; }
+.home-page .footer-snap { min-block-size: var(--panel-height, 100svh); overflow: visible; scroll-snap-align: start; scroll-snap-stop: always; }
 .home-page .news-section, .home-page .film-section__inner, .home-page .doujin-section__inner { block-size: 100%; display: flex; flex-direction: column; justify-content: center; }
 .home-page .world-section { --marquee-h: clamp(82px, 13svh, 116px); }
 .home-page .world-section__marquee { block-size: var(--marquee-h); }
